@@ -40,11 +40,10 @@ before_deploy:
     - git config --local user.name "SrPatinhas"
     - git config --local user.email "migas_cerejo-1993@hotmail.com"
     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-    - git tag $TRAVIS_TAG  
+    - git tag $TRAVIS_JOB_NUMBER
 deploy:
   provider: releases
   api_key: $GH_TOKEN
-  file: 
-    - dist/win/Dreamovies_App-win.zip
-    - dist/osx/Dreamovies_App-osx.zip
+  file_glob: true
+  file: /*
   skip_cleanup: true
