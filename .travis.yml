@@ -40,10 +40,11 @@ before_deploy:
     - git config --local user.name "SrPatinhas"
     - git config --local user.email "migas_cerejo-1993@hotmail.com"
     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-    - git tag $TRAVIS_JOB_NUMBER
+    - git tag $TRAVIS_TAG
 deploy:
   provider: releases
   api_key: $GH_TOKEN
   file_glob: true
-  file: /*
+  file: build/*
   skip_cleanup: true
+  overwrite: true
