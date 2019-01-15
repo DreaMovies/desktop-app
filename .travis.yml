@@ -37,6 +37,13 @@ script:
       yarn release
     fi
 
+install:
+- nvm install 7
+- curl -o- -L https://yarnpkg.com/install.sh | bash
+- source ~/.bashrc
+- npm install -g xvfb-maybe
+- yarn
+
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
