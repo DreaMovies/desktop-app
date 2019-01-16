@@ -1,4 +1,4 @@
-version: v0.0.1 #-{build}
+version: 0.0.1 #-{build}
 
 branches:
   only:
@@ -28,6 +28,9 @@ build_script:
 
 test: off
 
+artifacts:
+  - path: 'build\*.zip'
+  
 deploy:
   provider: GitHub
   auth_token:
