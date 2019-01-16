@@ -27,3 +27,7 @@ build_script:
   - yarn build
 
 test: off
+
+deploy:
+  draft: true
+  force_update: true
