@@ -9,8 +9,8 @@ platform:
   - x64
 
 cache:
-  - node_modules
-  - '%APPDATA%\npm-cache'
+  #- node_modules
+  #- '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
   - '%USERPROFILE%\AppData\Local\Yarn\cache'
 
@@ -28,19 +28,9 @@ build_script:
 
 test: off
 
-build:
-  verbosity: minimal
-
 deploy:
-  release: myproduct-v$(appveyor_build_version)
-  description: 'Windows Release'
   provider: GitHub
   auth_token:
     secure: E9nApO5HbyRTj3NzTUwWGL3nikARM929rpSkfdL25ZC9CU/+fPsq4pPwrG42kjHh # your encrypted token from GitHub
-  artifact: /.*\.nupkg/            # upload all NuGet packages to release assets
   draft: true
-  prerelease: true
   force_update: true
-  on:
-    branch: master                 # release from master branch only
-    APPVEYOR_REPO_TAG: false        # deploy on tag push only
