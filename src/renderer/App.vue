@@ -1,15 +1,20 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+	<div id="app">
+		<Layout></Layout>
+	</div>
 </template>
 
 <script>
-  export default {
-    name: 'dreamovies_app_alpha'
-  }
+	import Layout from '@/components/layout';
+
+	export default {
+		name: 'Dreamovies-App',
+		components: {
+			Layout,
+		},
+	};
 </script>
 
 <style>
-  /* CSS */
+	/* CSS */
 </style>

@@ -3,14 +3,6 @@
     <div class="title">Information</div>
     <div class="items">
       <div class="item">
-        <div class="name">Path:</div>
-        <div class="value">{{ path }}</div>
-      </div>
-      <div class="item">
-        <div class="name">Route Name:</div>
-        <div class="value">{{ name }}</div>
-      </div>
-      <div class="item">
         <div class="name">Vue.js:</div>
         <div class="value">{{ vue }}</div>
       </div>
@@ -26,23 +18,35 @@
         <div class="name">Platform:</div>
         <div class="value">{{ platform }}</div>
       </div>
+      <div class="item">
+        <div class="name">App Version:</div>
+        <div class="value">{{ app_version }}</div>
+      </div>
+
+      <div class="item">
+        <div class="name">Check for Update:</div>
+        <div class="value">{{ app_update }}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    data () {
+    data() {
       return {
-        electron: process.versions.electron,
-        name: this.$route.name,
+        electron: process.versions['atom-shell'],
         node: process.versions.node,
-        path: this.$route.path,
         platform: require('os').platform(),
-        vue: require('vue/package.json').version
-      }
-    }
-  }
+        vue: require('vue/package.json').version,
+        app_version: require('os').platform(),
+        app_update: false,
+      };
+    },
+    created() {
+      this.app_update = true;
+    },
+  };
 </script>
 
 <style scoped>

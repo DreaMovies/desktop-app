@@ -7,8 +7,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      name: 'index',
+      component: require('@/components/').default
+    },
+    {
+      path: '/local-media',
+      name: 'local-media',
+      component: require('@/components/localMedia').default
     },
     {
       path: '*',
