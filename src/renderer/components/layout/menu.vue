@@ -1,18 +1,14 @@
 <template>
 	<nav class="navbar header-top fixed-top navbar-expand-lg  navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">LOGO</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
-		aria-expanded="false" aria-label="Toggle navigation">
+		<b-link class="navbar-brand" to="/index">LOGO</b-link>
+		<button class="navbar-toggler" type="button" @click="toggleSidebar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarText">
-			<Sidebar></Sidebar>
+			<Sidebar :expanded="isExpanded"></Sidebar>
 			<ul class="navbar-nav ml-md-auto d-md-flex">
 				<li class="nav-item">
-					<a class="nav-link" href="#">User</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">menu</a>
+					<b-link class="nav-link" to="/settings">User</b-link>
 				</li>
 			</ul>
 		</div>
@@ -26,7 +22,15 @@
 		components: {
 			Sidebar,
 		},
+		data: function(){
+			return {
+				isExpanded: true
+			}
+		},
 		methods: {
+			toggleSidebar(){
+				this.isExpanded = !this.isExpanded; 
+			},
 			// open(link) {
 			// this.link = link;
 			// require('electron').shell.openExternal(link);
@@ -34,6 +38,3 @@
 		},
 	};
 </script>
-
-<style>
-</style>

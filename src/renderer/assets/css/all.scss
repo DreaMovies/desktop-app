@@ -1,0 +1,100 @@
+@import "./globals.scss";
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600');
+/* Generic stuff */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+
+html, body {
+	font-family: 'Open Sans', sans-serif;
+	color: rgba(#fff,1);
+	background: #e0e0e0;
+	background: -webkit-linear-gradient(left, #e0e0e0, #a9a9a9);
+	background: -o-linear-gradient(left, #e0e0e0, #a9a9a9);
+	background: linear-gradient(to right, #e0e0e0, #a9a9a9);
+	height: 100%;
+	width: 100%;
+	position: relative;
+	display: block;
+}
+main {
+	display: flex;
+	justify-content: space-between;
+	& > div {
+		flex-basis: 50%;
+	}
+}
+#app,
+#app > div {
+	height: 100%;
+	width: 100%;
+	position: relative;
+	display: block;
+    overflow: hidden;
+}
+
+
+/*
+ * Layout Core
+ */
+/* Base Layout */
+.layout-app{
+    width: calc( 100% - 200px );
+    height: calc( 100% - 70px );
+	overflow: auto;
+	display: block;
+	position: relative;
+	padding: 0;
+	margin: 70px 0 0 200px;
+}
+/* Top bar */
+.window-topbar {
+	background: #eee;
+	position: fixed;
+	display: block;
+	z-index: 99999;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+	width: 100%;
+	-webkit-app-region: drag;
+}
+/* Top menu */
+.navbar-expand-lg .navbar-nav.side-nav{
+	flex-direction: column;
+}
+.card{
+	margin-bottom: 15px;
+	border-radius:0;
+	box-shadow: 0 3px 5px rgba(0,0,0,.1);
+}
+.header-top{
+	box-shadow: 0 3px 5px rgba(0,0,0,.1)
+}
+.navbar.header-top.fixed-top{
+	top: 30px;
+	height: 40px; 
+}
+/* Sidebar */
+.navbar-nav.side-nav{
+	background: #585f66;
+	box-shadow: 2px 1px 2px rgba(0,0,0,.1);
+	position:fixed;
+	top: 70px;
+	flex-direction: column!important;
+	left:0;
+	width:200px;
+	overflow-y:auto;
+	bottom:0;
+	overflow-x:hidden;
+	padding-bottom:40px;
+}
+
+
+@import "./pages.scss";
+@import "./components.scss";

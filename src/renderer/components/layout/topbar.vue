@@ -1,7 +1,5 @@
 <template>
-	<div>
-		topbar
-	</div>
+	<div class="window-topbar"></div>
 </template>
 
 <script>
@@ -15,7 +13,3 @@
 		},
 	};
 </script>
-
-<style>
-
-</style>

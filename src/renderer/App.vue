@@ -15,6 +15,8 @@
 	};
 </script>
 
-<style>
+<style lang="scss">
 	/* CSS */
+	@import "@/assets/css/all.scss";
+
 </style>
