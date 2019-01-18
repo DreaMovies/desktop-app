@@ -1,4 +1,3 @@
-const $ 	= require("jquery");
 var util	= require('../js/util.js');
 
 var listItem = function(list, id, info){
@@ -17,9 +16,9 @@ var listItem = function(list, id, info){
 	'</div>';
 
 	if(list == "upload"){
-		$("#list-upload").append(html);
+		//$("#list-upload").append(html);
 	} else if(list == "download"){
-		$("#list-download").append(html);
+		//$("#list-download").append(html);
 	}
 };
 
@@ -30,25 +29,25 @@ var progress = function(id){
 	return html;
 }
 var barUpdate = function(id, progress, error = false, msgError = ""){
-	$("#progress-bar-" + id).css("width", progress + "%").attr("aria-valuenow", progress).text(progress + "%");
-	if(parseInt(progress) == 100){
-		$("#progress-bar-" + id).addClass('bg-success');
-	}
-	if(error){
-		$("#progress-bar-" + id).css("width", progress + "%").attr("aria-valuenow", progress).text(msgError);
-		$("#progress-bar-" + id).removeClass('bg-success').addClass('bg-danger');
-	} else {
-		$("#progress-bar-" + id).css("width", progress + "%").attr("aria-valuenow", progress).text(progress + "%");
-	}
+	////$("#progress-bar-" + id).css("width", progress + "%").attr("aria-valuenow", progress).text(progress + "%");
+	//if(parseInt(progress) == 100){
+	//	$("#progress-bar-" + id).addClass('bg-success');
+	//}
+	//if(error){
+	//	$("#progress-bar-" + id).css("width", progress + "%").attr("aria-valuenow", progress).text(msgError);
+	//	$("#progress-bar-" + id).removeClass('bg-success').addClass('bg-danger');
+	//} else {
+	//	$("#progress-bar-" + id).css("width", progress + "%").attr("aria-valuenow", progress).text(progress + "%");
+	//}
 };
 
 var infoUpdate = function(id, info){
-	$("#upload-item-" + id + " strong").text(info.title);
-	$("#upload-item-" + id + " img").attr('src', info.image);
+	//$("#upload-item-" + id + " strong").text(info.title);
+	//$("#upload-item-" + id + " img").attr('src', info.image);
 }
 
 var itemFinalize = function(id, info){
-	$("#upload-item-" + id + " p.final-link").text(info.url);
+	//$("#upload-item-" + id + " p.final-link").text(info.url);
 }
 
 var downloadUpdate = function(info){
@@ -59,8 +58,8 @@ var downloadUpdate = function(info){
 	'	<span>DownloadSpeed: ' + info.downloadSpeed + '</span> - <span>uploadSpeed: ' + info.uploadSpeed + '</span>'+
 	'</div>';
 
-	$("#download-item-" + info.id + " .file-peers").text(info.numPeers + (info.numPeers === 1 ? ' peer' : ' peers'));
-	$("#download-item-" + info.id + " .file-info").html(info_Html);
+	//$("#download-item-" + info.id + " .file-peers").text(info.numPeers + (info.numPeers === 1 ? ' peer' : ' peers'));
+	//$("#download-item-" + info.id + " .file-info").html(info_Html);
 	barUpdate(info.id, info.progress);
 };
 
@@ -73,8 +72,8 @@ var TorrentList = function(list, infoHash){
 		html += "</li>";
 	}
 	html += "</ul>";
-	$("#modalListTorrent .modal-body").html(html);
-	$('#modalListTorrent').modal('show');
+	//$("#modalListTorrent .modal-body").html(html);
+	//$('#modalListTorrent').modal('show');
 };
 
 
@@ -138,7 +137,7 @@ var filterCreate = function(type = "Categories"){
 var tableFill = function(){
 	var html = "";
 	
-	$(".array-list-upload").html('');
+	//$(".array-list-upload").html('');
 	Object.keys(window.list_uploads).forEach(function(key) {
 		console.log(key, window.list_uploads[key]);
 		html += '<tr>' + 
@@ -149,10 +148,10 @@ var tableFill = function(){
 			'</tr>';
 	});
 	
-	$(".array-list-upload").append(html);
+	//$(".array-list-upload").append(html);
 
 	var html = "";
-	$(".array-list-download").html('');
+	7/$(".array-list-download").html('');
 	Object.keys(window.list_downloads).forEach(function(key) {
 		console.log(key, window.list_downloads[key]);
 		html += '<tr>' + 
@@ -165,14 +164,14 @@ var tableFill = function(){
 			'</tr>';
 	});
 	
-	$(".array-list-download").append(html)
+	//$(".array-list-download").append(html)
 }
 
 
 var activateView = function(){
-	$("#log-container, #API-list").removeClass('show-container');
-	$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
-	$("#files-container").addClass('show-container');
+	//$("#log-container, #API-list").removeClass('show-container');
+	//$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
+	//$("#files-container").addClass('show-container');
 }
 
 module.exports = {

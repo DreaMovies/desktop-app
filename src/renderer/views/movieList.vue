@@ -1,11 +1,12 @@
 <template>
-    <div>
+    <div class="page-movie-list">
         movie detail {{ $route.params.plugin }}
-        <ul>
+        <ul v-if="list != ''" class="movie-list">
             <li v-for="item in list">
-                <movie_item :movie="item"></movie_item>
+                <movie_item :plugin="currentPlugin" :movie="item"></movie_item>
             </li>
         </ul>
+        <b-pagination @change="changePage" align="center" :total-rows="totalRow" v-model="currentPage" :per-page="perPage"></b-pagination>
     </div>
 </template>
 
@@ -21,19 +22,33 @@
         },
         data() {
             return {
-                list: {}
+                currentPlugin: "",
+                list: {},
+                currentPage: 1,
+                perPage: 10,
+                totalRow: 10,
             }
         },
         created: function () {
-            // `this` points to the vm instance
-            console.log('a is: ' + this.a);
-            loadList($route.params.plugin);
+            this.loadList(this.$route.params.plugin);
         },
         methods: {
             loadList(plugin) {
                 if(services.check_plugin(plugin)){
-                    services.loadList(plugin);
+                    this.currentPlugin = plugin;
+                    this.changePage(this.currentPage);
                 }
+            },
+            changePage(page){
+                services.loadList(this.currentPlugin, page)
+                        .then((response) => {
+                            var resp = response.data.data;
+                            this.currentPage = resp.page_number;
+                            this.perPage = resp.limit;
+                            this.totalRow = resp.movie_count;
+                            this.list = resp.movies;
+                        });
+                
             }
             // open(link) {
             // this.link = link;

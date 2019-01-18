@@ -5,7 +5,7 @@
   position: relative;
   width: 210px;
   height: 310px;
-  background: url('https://television.mxdwn.com/wp-content/uploads/2016/08/stranger-things1-770x470.jpeg') no-repeat center/cover;
+  background: no-repeat center/cover;
   border-radius: 10px;
   box-shadow: 0 10px 25px 0 rgba(black,.5);
   transition: .5s;
@@ -16,14 +16,14 @@
   &:hover {
     transition: .5s;
     .info{
-      padding-top: 30px;
+      padding-top: 60px;
       opacity: 1;
       transition: .5s;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
     }
     .title {
-      padding-bottom: 50px;
+      padding-bottom: 20px;
       opacity: 1;
       transition: .5s;
       border-bottom-left-radius: 10px;
@@ -53,7 +53,7 @@
     opacity: 0;
     transition: .5s;
     z-index:2;
-    color: rgba(#fff,.8);
+    color: rgba(#fff,.9);
     .year{
       position: absolute;
       left: 30px;
@@ -66,7 +66,7 @@
     }
   }
   .title {
-    color: rgba(#fff,.7);
+    color: rgba(#fff,.85);
     position: absolute;
     width: 100%;
     bottom: 0;
@@ -74,7 +74,7 @@
     font-size: 18px;
     font-weight: 300;
     box-sizing: border-box;
-    padding: 30px 10px;
+    padding: 90px 10px;
     background: linear-gradient(to top, #000, transparent);
     text-transform: uppercase;
     text-align: center;
@@ -392,3 +392,7 @@
   }
 }
 
+
+.component-player{
+  
+}

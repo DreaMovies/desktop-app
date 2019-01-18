@@ -30,7 +30,7 @@ export default new Router({
 			component: movieList
 		},
 		{
-			path: '/movie-detail/:id',
+			path: '/movie-detail/:plugin/:imdb/:id',
 			name: 'movie-detail',
 			component: movieDetail
 		},
@@ -40,7 +40,7 @@ export default new Router({
 			component: tvshowList
 		},
 		{
-			path: '/tvshow-detail/:id',
+			path: '/tvshow-detail/:plugin/:imdb/:id',
 			name: 'tvshow-detail',
 			component: tvshowDetail
 		},

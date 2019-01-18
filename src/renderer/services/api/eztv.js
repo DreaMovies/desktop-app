@@ -1,5 +1,4 @@
 const axios		= require('axios');              //Get list of movies
-const $ 		= require("jquery");
 
 var util			= require('../util.js');
 var torrent_tool 	= require('../torrent_download.js');
@@ -46,7 +45,7 @@ var getListReleases = function(page = 1){
 	 *		},
 	 */
 
-	$(".btn-search").removeClass("yts-filter eztv-filter dreamovies-filter").addClass("eztv-filter");
+	//$(".btn-search").removeClass("yts-filter eztv-filter dreamovies-filter").addClass("eztv-filter");
 	// Optionally the request above could also be done as
 	axios_eztv.get('/get-torrents', {
 			params: {
@@ -120,14 +119,14 @@ var getListByShow = function(imdb_id, page = 1){
 }
 
 
-$(document).on('click', '.eztv-list .page-link', function(e){
-	var page = $(this).data('page');
-	getListReleases(page);
-});
-$(document).on('click', '.eztv-list .torrent-download', function(e){
-	var torrent = $(this).data('magnet');
-	torrent_tool.torrentDiscover(torrent, true);
-});
+//$(document).on('click', '.eztv-list .page-link', function(e){
+//	var page = $(this).data('page');
+//	getListReleases(page);
+//});
+//$(document).on('click', '.eztv-list .torrent-download', function(e){
+//	var torrent = $(this).data('magnet');
+//	torrent_tool.torrentDiscover(torrent, true);
+//});
 
 module.exports = {
 	getListReleases: getListReleases,

@@ -1,4 +1,3 @@
-const $ 		= require("jquery");
 var util		= require('../js/util.js');
 var yts_api		= require('../js/api/yts.js');
 
@@ -17,7 +16,7 @@ var MoviesList = function(response){
 //	html += util.pagination(response.page_number, response.movie_count / 30);
 	html += MoviesPagination(response.page_number, response.movie_count);
 
-	$("#API-list").html(html);
+	//$("#API-list").html(html);
 };
 
 
@@ -101,9 +100,9 @@ var MovieItem = function(item){
 }
 
 var showListAPI = function(){
-	$("#log-container, #files-container").removeClass('show-container');
-	$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
-	$("#API-list").addClass('show-container dreamovies-list');
+	//$("#log-container, #files-container").removeClass('show-container');
+	//$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
+	//$("#API-list").addClass('show-container dreamovies-list');
 }
 
 

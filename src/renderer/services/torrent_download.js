@@ -1,5 +1,4 @@
 var WebTorrent 	= require('webtorrent');
-const $ 		= require("jquery");
 
 var infoFetcher	= require('../js/info_fetcher.js');
 var views 		= require('../view/generic_view.js');
@@ -18,7 +17,7 @@ var torrentAdd = function(filePath, toDiscover = false){
 	var current_id = Date.now();
 
 	views.activateView();
-	$(".download-side .loading").addClass("show");
+	//$(".download-side .loading").addClass("show");
 	if(toDiscover){
 		client.add(filePath, {path: DOWNLOAD_FOLDER}, function (torrent) {
 			torrentDiscover(torrent.infoHash);
@@ -101,7 +100,7 @@ var torrentDownload = function (infoHash, filePosition) {
 		views.listItem("download", current_id, info);
 		views.activateView();
 
-		$(".download-side .loading").removeClass("show");
+		//$(".download-side .loading").removeClass("show");
 
 		torrent.on('warning', function (err) {
 			console.log(err);
@@ -204,18 +203,18 @@ var previewFile = function(filePath){
 };
 
 
-$(document).on('click', '.torrent-select', function(e){
-	var file_position = $(this).data('position');
-	var file_hash = $(this).data('hash');
-	$('#modalListTorrent').modal('hide');
-
-	var torrent = client.get(file_hash);
-	if (torrent.ready){
-		torrentDownload(file_hash, file_position);;
-	} else {
-		torrent.on('ready', torrentDownload(file_hash, file_position));
-	}
-});
+//$(document).on('click', '.torrent-select', function(e){
+//	var file_position = $(this).data('position');
+//	var file_hash = $(this).data('hash');
+//	$('#modalListTorrent').modal('hide');
+//
+//	var torrent = client.get(file_hash);
+//	if (torrent.ready){
+//		torrentDownload(file_hash, file_position);;
+//	} else {
+//		torrent.on('ready', torrentDownload(file_hash, file_position));
+//	}
+//});
 
 
 

@@ -1,7 +1,6 @@
 const fs 		= require('fs');
 const path 		= require('path');
 const _			= require('underscore');
-const $ 		= require("jquery");
 const videojs	= require("video.js");
 
 const subtitles 	= [];
@@ -31,8 +30,8 @@ var lang_codes = {
 var create = function(element){
 	//destroy(document.getElementById('my-player'));
 	console.log("Create Player");
-	$(".main-content, .over-all").toggleClass("content-hide content-show");
-	$('#video-player').html('<video id="my-player" class="video-js"><p class="vjs-no-js">Error with Player</p></video>');
+	//$(".main-content, .over-all").toggleClass("content-hide content-show");
+	//$('#video-player').html('<video id="my-player" class="video-js"><p class="vjs-no-js">Error with Player</p></video>');
 };
 
 var play = function (path){
@@ -119,8 +118,8 @@ var startPlayer = function(options){
 var destroy = function(){
 	console.log("Player Destroyed");
 	videojs( document.getElementById('my-player') ).dispose();
-	$("#video-player").html("");
-	$(".main-content, .over-all").toggleClass("content-hide content-show");
+	//$("#video-player").html("");
+	//$(".main-content, .over-all").toggleClass("content-hide content-show");
 };
 
 module.exports = {

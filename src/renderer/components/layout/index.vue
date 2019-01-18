@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="layout-core">
 		<TopBar></TopBar>
 		<Menu></Menu>
 		<div class="layout-app">

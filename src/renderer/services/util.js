@@ -1,7 +1,6 @@
 const fs 	= require('fs');
 const path 	= require('path');
 const _		= require('underscore');
-const $ 	= require("jquery");
 
 const remote 	= require('electron').remote
 const { Menu, MenuItem } = require('electron').remote;
@@ -408,9 +407,9 @@ var listSort = function() {
 }
 
 var showLogTable = function(){
-	$("#files-container, #API-list").removeClass('show-container');
-	$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
-	$("#log-container").addClass('show-container');
+	//$("#files-container, #API-list").removeClass('show-container');
+	//$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
+	//$("#log-container").addClass('show-container');
 }
 
 

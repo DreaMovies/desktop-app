@@ -1,15 +1,19 @@
-//import api_yts from "./api/yts.js";
+import api_yts from "./api/yts.js";
 
-module.exports = {
+export default {
     check_plugin(plugin) {
         if (plugin == "yts") {
             return true;
         }
     },
-    loadList(plugin) {
+    loadList(plugin, page) {
         if (plugin == "yts") {
-            var list = {};//api_yts.getList();
-            return list;
+            return api_yts.getList(page);
+        }
+    },
+    loadDetail(params) { //plugin, imdb, id
+        if (params.plugin == "yts") {
+            return api_yts.getDetails(params.id);
         }
     },
 }

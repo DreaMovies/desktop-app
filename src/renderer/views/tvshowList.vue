@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-tvshow-list">
     movie detail {{ $route.params.id }}
   </div>
 </template>

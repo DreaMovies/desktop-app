@@ -1,9 +1,8 @@
 const fs            = require('fs');
 const path 			= require('path');
 const axios         = require('axios');                       //to make http requests
-const zlib          = require('zlib');                          //to read zipped files
-const iconv         = require('iconv-lite');                    //to recode files
-const jQuery        = require("jquery");
+const zlib          = require('zlib');                        //to read zipped files
+const iconv         = require('iconv-lite');                  //to recode files
 const srt2vtt       = require('srt-to-vtt');
 
 var subtitles     	= [];

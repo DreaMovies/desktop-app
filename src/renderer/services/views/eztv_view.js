@@ -1,4 +1,3 @@
-const $ 		= require("jquery");
 var util		= require('../js/util.js');
 var yts_api		= require('../js/api/yts.js');
 var view		= require('../view/generic_view.js');
@@ -6,7 +5,7 @@ var view		= require('../view/generic_view.js');
 var ShowsList = function(response){
 
 	showListAPI();
-	$("#options-bar").html('');
+	//$("#options-bar").html('');
 
 	var list = response.torrents;
 
@@ -31,7 +30,7 @@ var ShowsList = function(response){
 
 	html += view.ListPagination(response.page, response.torrents_count);
 
-	$("#API-list").html(html);
+	//$("#API-list").html(html);
 };
 
 
@@ -50,10 +49,10 @@ var EpisodeItem = function(item){
 }
 
 var showListAPI = function(){
-	$("#log-container, #files-container").removeClass('show-container');
-	$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
-
-	$("#API-list").addClass('show-container eztv-list');
+	//$("#log-container, #files-container").removeClass('show-container');
+	//$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
+//
+	//$("#API-list").addClass('show-container eztv-list');
 }
 
 

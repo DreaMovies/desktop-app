@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-local-media">
     lets go
     <movieItem :movie="movie"></movieItem> 
   </div>

@@ -1,4 +1,4 @@
-const $ 		= require("jquery");
+//const $ 		= require("jquery");
 var util		= require('../js/util.js');
 var yts_api		= require('../js/api/yts.js');
 var view		= require('../view/generic_view.js');
@@ -12,7 +12,7 @@ var MoviesList = function(response){
 	bar_filters += view.filterCreate("Quality");
 	bar_filters += view.filterCreate("Sort");
 
-	$("#options-bar").html(bar_filters);
+	//$("#options-bar").html(bar_filters);
 
 	var list = response.movies;
 
@@ -26,7 +26,7 @@ var MoviesList = function(response){
 //	html += util.pagination(response.page_number, response.movie_count / 30);
 	html += view.ListPagination(response.page_number, response.movie_count);
 
-	$("#API-list").html(html);
+	//$("#API-list").html(html);
 };
 
 
@@ -111,10 +111,10 @@ var MovieItem = function(item){
 
 
 var showListAPI = function(){
-	$("#log-container").removeClass('show-container');
-	$("#files-container").removeClass('show-container');
-	$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
-	$("#API-list").addClass('show-container yts-list');
+	//$("#log-container").removeClass('show-container');
+	//$("#files-container").removeClass('show-container');
+	//$("#API-list").removeClass('yts-list eztv-list dreamovies-list');
+	//$("#API-list").addClass('show-container yts-list');
 }
 
 module.exports = {

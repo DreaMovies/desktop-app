@@ -1,5 +1,4 @@
 const nativeImage 	= require('electron').nativeImage;
-const $ 			= require("jquery");
 
 const remote 		= require('electron').remote;
 const { Menu, MenuItem } = require('electron').remote;
@@ -108,7 +107,7 @@ var displayPlugins = function(){
 		//}
 	});
 
-	$("#pluginsList").append(html);
+	//$("#pluginsList").append(html);
 }
 
 module.exports = {

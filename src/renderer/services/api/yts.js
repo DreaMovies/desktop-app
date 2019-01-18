@@ -2,17 +2,18 @@ import axios from 'axios';              //Get list of movies
 //var torrent_tool 	= require('../torrent_download.js');
 //var views_yts 		= require('../../view/yts_view.js');
 
-const axios_yts = axios.create({
-    baseURL: 'https://yts.am/api/v2/',
-    timeout: 1000,
-    headers: {
-        'X-App': 'DreamoviesUploader/V1',
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-});
 
-module.exports = {
-    getList(page = 1, params = []) {
+
+export default {
+    axios_yts: axios.create({
+        baseURL: 'https://yts.am/api/v2/',
+        timeout: 1000,
+        headers: {
+            //'X-App': 'DreamoviesUploader/V1',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }),
+    async getList(page = 1, params = []) {
         /*
             limit				Integer 		between 1 - 50 (inclusive)			20			The limit of results per page that has been set
             page				Integer 		(Unsigned)							1			Used to see the next page of movies, eg limit=15 and page=2 will show you movies 15-30
@@ -27,7 +28,7 @@ module.exports = {
         var filters = this.getFilters();
 
         // Optionally the request above could also be done as
-        axios_yts.get('/list_movies.json', {
+        return await this.axios_yts.get('/list_movies.json', {
             params: {
                 limit: filters.limit,
                 page: page,
@@ -39,16 +40,16 @@ module.exports = {
                 order_by: filters.order_by,
                 //with_rt_ratings: true,
             }
-        }).then(function (response) {
-            console.log(response);
-
-            return response.data.data;
-            //views_yts.MoviesList(moviesList);
-        }).catch(function (error) {
-            console.log(error);
-        }).then(function () {
-            // always executed
         });
+        //.then(function (response) {
+        //    console.log(response);
+        //    return response.data.data;
+        //    //views_yts.MoviesList(moviesList);
+        //}).catch(function (error) {
+        //    console.log(error);
+        //}).then(function () {
+        //    // always executed
+        //});
     },
     getFilters(argument) {
         var filters = {};
@@ -60,6 +61,15 @@ module.exports = {
         filters.keyword = ''; //$(".input-search").val();
 
         return filters;
+    },
+    async getDetails(id){
+        return await this.axios_yts.get('/movie_details.json', {
+            params: {
+                movie_id: id,
+                with_images: true,
+                with_cast: true
+            }
+        });
     }
 };
 
