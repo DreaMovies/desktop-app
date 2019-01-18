@@ -35,7 +35,7 @@
   export default {
     data() {
       return {
-        electron: process.versions['atom-shell'],
+        electron: process.versions.electron,
         node: process.versions.node,
         platform: require('os').platform(),
         vue: require('vue/package.json').version,

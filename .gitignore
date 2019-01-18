@@ -61,3 +61,4 @@ typings/
 .next
 dist/electron/main.js
 dist/electron/main.js
+.idea/

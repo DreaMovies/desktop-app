@@ -18,16 +18,20 @@ function createWindow () {
 	 * Initial window options
 	 */
 	var mainWindow_Config = {
-								frame: false,
-								titleBarStyle: 'hidden',
-								useContentSize: true,
-								width: 1280,
-								height: 800,
-								minWidth: 800,
-								minHeight: 600,
-								backgroundColor: "#232e4e",
-								icon: require('path').join(__dirname, '/build/icons/64x64.png')
-							};
+		width: 1280,
+		height: 800,
+		minWidth: 800,
+		minHeight: 600,
+		backgroundColor: "#232e4e",
+
+		icon: require('path').join(__dirname, '/build/icons/64x64.png'),
+		titleBarStyle: 'hidden',
+		frame: false,
+		useContentSize: true,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	};
 
 	mainWindow = new BrowserWindow( mainWindow_Config );
 
