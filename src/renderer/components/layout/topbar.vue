@@ -1,5 +1,6 @@
 <template>
 	<div class="window-topbar">
+		Dreamovies App
 		<div :class="[( os_type == 'mac' ? 'os-mac' : 'os-windows')]">
 			<div class="wc-box">
 				<div class="minimize" @click="window_min"></div>
@@ -9,8 +10,8 @@
 			<div class="title-bar">
 				<div class="close" @click="window_close"></div>
 				<div class="minimize" @click="window_min"></div>
-				<div class="maximize" @click="window_max"></div>
 				<div class="zoom"></div>
+				<div class="maximize" @click="window_max"><span class="arrow-icon"></span></div>
 			</div>
 		</div>
 	</div>

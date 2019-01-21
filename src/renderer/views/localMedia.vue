@@ -1,16 +1,16 @@
 <template>
   <div class="page-local-media">
     lets go
-    <movieItem :movie="movie"></movieItem> 
+    <itemMovie :movie="movie"></itemMovie> 
   </div>
 </template>
 
 <script>
-  import movieItem from '@/components/elements/movie_item';
+  import itemMovie from '@/components/elements/item_movie';
 
   export default {
     name: 'local-media',
-    components: { movieItem },
+    components: { itemMovie },
     data: function(){
       return {
         movie: {

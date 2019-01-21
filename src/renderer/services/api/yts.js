@@ -1,79 +1,110 @@
-import axios from 'axios';              //Get list of movies
-//var torrent_tool 	= require('../torrent_download.js');
-//var views_yts 		= require('../../view/yts_view.js');
-
-
+import axios from 'axios';
 
 export default {
     config: {
-        hasFilters: true,
         name: "yts",
-        logo: "img.png"
+        label: "YTS Movies",
+        logo: "img.png",
+        url: "https://yts.am/api/v2/",
+        hasFilters: true,
+        type: "movies",
+        player: "torrent"
     },
     axios_yts: axios.create({
-        baseURL: 'https://yts.am/api/v2/',
+        baseURL: "https://yts.am/api/v2/",
         timeout: 1000,
         headers: {
-            //'X-App': 'DreamoviesUploader/V1',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     }),
     filters(){
         var filters = {
-            order_by: [],
-            genre: [],
-            quality: [],
-            sort_by: [],
-            keyword: ""
+            order_by: {
+                type: "list",
+                field: "order_by",
+                placeholder: "Order By",
+                list: [
+                    { value: "latest",       label: "Latest"        },
+                    { value: "oldest",       label: "Oldest"        },
+                    { value: "seeds",        label: "Seeds"         },
+                    { value: "peers",        label: "Peers"         },
+                    { value: "year",         label: "Year"          },
+                    { value: "rating",       label: "Rating"        },
+                    { value: "likes",        label: "Likes"         },
+                    { value: "alphabetical", label: "Alphabetical"  },
+                    { value: "downloads",    label: "Downloads"     }
+                ],
+            },
+            genre: {
+                type: "list",
+                field: "genre",
+                placeholder: "Genres",
+                list: [
+                    { value: "all",         label: "All"         },
+                    { value: "action",      label: "Action"      },
+                    { value: "adventure",   label: "Adventure"   },
+                    { value: "animation",   label: "Animation"   },
+                    { value: "biography",   label: "Biography"   },
+                    { value: "comedy",      label: "Comedy"      },
+                    { value: "crime",       label: "Crime"       },
+                    { value: "documentary", label: "Documentary" },
+                    { value: "drama",       label: "Drama"       },
+                    { value: "family",      label: "Family"      },
+                    { value: "fantasy",     label: "Fantasy"     },
+                    { value: "film-noir",   label: "Film-Noir"   },
+                    { value: "game-show",   label: "Game-Show"   },
+                    { value: "history",     label: "History"     },
+                    { value: "horror",      label: "Horror"      },
+                    { value: "music",       label: "Music"       },
+                    { value: "musical",     label: "Musical"     },
+                    { value: "mystery",     label: "Mystery"     },
+                    { value: "news",        label: "News"        },
+                    { value: "reality-tv",  label: "Reality-TV"  },
+                    { value: "romance",     label: "Romance"     },
+                    { value: "sci-fi",      label: "Sci-Fi"      },
+                    { value: "sport",       label: "Sport"       },
+                    { value: "talk-show",   label: "Talk-Show"   },
+                    { value: "thriller",    label: "Thriller"    },
+                    { value: "war",         label: "War"         },
+                    { value: "western",     label: "Western"     }
+                ],
+            },
+            quality: {
+                type: "list",
+                field: "quality",
+                placeholder: "Quality",
+                list: [
+                    { value: "720p,1080p",  label: "720p/1080p" },
+                    { value: "all",         label: "All"    },
+                    { value: "720p",        label: "720p"   },
+                    { value: "1080p",       label: "1080p"  },
+                    { value: "3D",          label: "3D"     }
+                ],
+            },
+            sort_by: {
+                type: "list",
+                field: "sort_by",
+                placeholder: "Sort By",
+                list: [
+                    { value: "date_added",      label: "Date Added"     },
+                    { value: "title",           label: "Title"          },
+                    { value: "year",            label: "Year"           },
+                    { value: "rating",          label: "Rating"         },
+                    { value: "peers",           label: "Peers"          },
+                    { value: "seeds",           label: "Seeds"          },
+                    { value: "download_count",  label: "Download Count" },
+                    { value: "like_count",      label: "Like Count"     }
+                ],
+            },
+            keyword: {
+                type: "text",
+                field: "keyword",
+                placeholder: "Search by...",
+            },
         };
-
-        filters.order_by = [
-            {
-                value: "date",
-                label: "Date"
-            },
-            {
-                value: "year",
-                label: "Year"
-            },
-            {
-                value: "name",
-                label: "Name"
-            }
-        ];
-        filters.genre    = [
-            {
-                value: "action",
-                label: "Action"
-            }
-        ];
-        filters.quality  = [
-            {
-                value: "all",
-                label: "All"
-            },
-            {
-                value: "720",
-                label: "720p"
-            },
-            {
-                value: "1080",
-                label: "1080p"
-            },
-            {
-                value: "3D",
-                label: "3D"
-            },
-        ];
-        filters.sort_by  = [
-            {
-                value: "quality",
-                label: "Quality"
-            },
-        ];
         return filters;
     },
-    getFilters(argument) {
+    defaultFilters(argument) {
         var filters = {};
         filters.limit = 20;
         filters.order_by ='desc'; // $("#options-bar .filter-order_by").val();
@@ -84,7 +115,12 @@ export default {
 
         return filters;
     },
-    async getList(page = 1, params = []) {
+    async list(params = []){ //movie/tvshow/anime
+        var params_default = {
+            type: "movie",
+            page: 1,
+            filters: this.defaultFilters()
+        }
         /*
             limit				Integer 		between 1 - 50 (inclusive)			20			The limit of results per page that has been set
             page				Integer 		(Unsigned)							1			Used to see the next page of movies, eg limit=15 and page=2 will show you movies 15-30
@@ -96,7 +132,7 @@ export default {
             order_by			String 			(desc, asc)							desc		Orders the results by either Ascending or Descending order
             with_rt_ratings		Boolean												false		Returns the list with the Rotten Tomatoes rating included
         */
-        var filters = this.getFilters();
+        var filters = params.filters;
 
         // Optionally the request above could also be done as
         return await this.axios_yts.get('/list_movies.json', {
@@ -112,17 +148,8 @@ export default {
                 //with_rt_ratings: true,
             }
         });
-        //.then(function (response) {
-        //    console.log(response);
-        //    return response.data.data;
-        //    //views_yts.MoviesList(moviesList);
-        //}).catch(function (error) {
-        //    console.log(error);
-        //}).then(function () {
-        //    // always executed
-        //});
     },
-    async getDetails(id){
+    async details(id){
         return await this.axios_yts.get('/movie_details.json', {
             params: {
                 movie_id: id,

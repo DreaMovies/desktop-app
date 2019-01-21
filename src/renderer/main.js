@@ -17,6 +17,10 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import db from './datastore';
 Vue.prototype.$db = db; //just use this.$db to access it
 
+import plugins from './services/api/index.js';
+Vue.prototype.$plugins = plugins;
+console.log(plugins);
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;

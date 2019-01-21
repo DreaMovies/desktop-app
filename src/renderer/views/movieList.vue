@@ -1,11 +1,11 @@
 <template>
     <div class="page-movie-list">
-        <list_filters v-if="config.hasFilters" :filters="filters"></list_filters>
+        <listFilters v-if="config.hasFilters" :filters="filters"></listFilters>
         movie detail {{ $route.params.plugin }}
 
         <ul v-if="list != ''" class="movie-list">
             <li v-for="item in list">
-                <movie_item :plugin="currentPlugin" :movie="item"></movie_item>
+                <itemMovie :plugin="currentPlugin" :movie="item"></itemMovie>
             </li>
         </ul>
         <b-pagination @change="changePage" align="center" :total-rows="totalRow" v-model="currentPage" :per-page="perPage"></b-pagination>
@@ -13,16 +13,16 @@
 </template>
 
 <script>
-    import movie_item from "../components/elements/movie_item";
-    import list_filters from "../components/elements/list_filters";
+    import itemMovie from "../components/elements/item_movie";
+    import listFilters from "../components/elements/list_filters";
     import services from "@/services/";
 
     export default {
         name: 'movie-list',
         components: {
             services,
-            list_filters,
-            movie_item
+            listFilters,
+            itemMovie
         },
         data() {
             return {
@@ -41,7 +41,7 @@
                 }
             }
         },
-        created: function () {
+        created() {
             this.loadList(this.$route.params.plugin);
         },
         methods: {
@@ -65,8 +65,12 @@
                             this.perPage = resp.limit;
                             this.totalRow = resp.movie_count;
                             this.list = resp.movies;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        }).then(function () {
+                            // always executed
                         });
-                
             }
             // open(link) {
             // this.link = link;

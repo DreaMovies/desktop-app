@@ -17,7 +17,7 @@
 
 <script>
 	export default {
-		name: 'movie-item',
+		name: 'item-movie',
 		props: [
 			'movie', 'plugin'
 		],
