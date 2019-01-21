@@ -5,6 +5,11 @@ import axios from 'axios';              //Get list of movies
 
 
 export default {
+    config: {
+        hasFilters: true,
+        name: "yts",
+        logo: "img.png"
+    },
     axios_yts: axios.create({
         baseURL: 'https://yts.am/api/v2/',
         timeout: 1000,
@@ -13,6 +18,72 @@ export default {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     }),
+    filters(){
+        var filters = {
+            order_by: [],
+            genre: [],
+            quality: [],
+            sort_by: [],
+            keyword: ""
+        };
+
+        filters.order_by = [
+            {
+                value: "date",
+                label: "Date"
+            },
+            {
+                value: "year",
+                label: "Year"
+            },
+            {
+                value: "name",
+                label: "Name"
+            }
+        ];
+        filters.genre    = [
+            {
+                value: "action",
+                label: "Action"
+            }
+        ];
+        filters.quality  = [
+            {
+                value: "all",
+                label: "All"
+            },
+            {
+                value: "720",
+                label: "720p"
+            },
+            {
+                value: "1080",
+                label: "1080p"
+            },
+            {
+                value: "3D",
+                label: "3D"
+            },
+        ];
+        filters.sort_by  = [
+            {
+                value: "quality",
+                label: "Quality"
+            },
+        ];
+        return filters;
+    },
+    getFilters(argument) {
+        var filters = {};
+        filters.limit = 20;
+        filters.order_by ='desc'; // $("#options-bar .filter-order_by").val();
+        filters.genre   = 'all'; //$("#options-bar .filter-genre").val();
+        filters.quality = 'all'; //$("#options-bar .filter-quality").val();
+        filters.sort_by = 'date_added'; //$("#options-bar .filter-sort_by").val();
+        filters.keyword = ''; //$(".input-search").val();
+
+        return filters;
+    },
     async getList(page = 1, params = []) {
         /*
             limit				Integer 		between 1 - 50 (inclusive)			20			The limit of results per page that has been set
@@ -50,17 +121,6 @@ export default {
         //}).then(function () {
         //    // always executed
         //});
-    },
-    getFilters(argument) {
-        var filters = {};
-        filters.limit = 20;
-        filters.order_by ='desc'; // $("#options-bar .filter-order_by").val();
-        filters.genre   = 'all'; //$("#options-bar .filter-genre").val();
-        filters.quality = 'all'; //$("#options-bar .filter-quality").val();
-        filters.sort_by = 'date_added'; //$("#options-bar .filter-sort_by").val();
-        filters.keyword = ''; //$(".input-search").val();
-
-        return filters;
     },
     async getDetails(id){
         return await this.axios_yts.get('/movie_details.json', {

@@ -62,6 +62,7 @@
 		"cheerio": "latest",
 		"fs-extra": "latest",
 		"iconv-lite": "latest",
+		"jquery": "^3.3.1",
 		"moviedb": "latest",
 		"nedb": "^1.8.0",
 		"node-openload": "latest",
