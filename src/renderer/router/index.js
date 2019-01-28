@@ -9,6 +9,7 @@ import movieDetail 	from '@/views/movieDetail';
 import tvshowList 	from '@/views/tvshowList';
 import tvshowDetail from '@/views/tvshowDetail';
 import settings 	from '@/views/settings';
+import downloads 	from '@/views/downloads';
 
 Vue.use(Router)
 
@@ -43,6 +44,11 @@ export default new Router({
 			path: '/tvshow-detail/:plugin/:imdb/:id',
 			name: 'tvshow-detail',
 			component: tvshowDetail
+		},
+		{
+			path: '/downloads',
+			name: 'downloads',
+			component: downloads
 		},
 		{
 			path: '/settings',

@@ -70,6 +70,7 @@
 		"popper.js": "latest",
 		"request": "latest",
 		"srt-to-vtt": "latest",
+		"streamsaver": "^1.0.1",
 		"underscore": "latest",
 		"video.js": "latest",
 		"videojs-chromecast": "latest",

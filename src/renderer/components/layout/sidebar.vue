@@ -1,25 +1,9 @@
 <template>
 	<ul :class="['navbar-nav side-nav', (expanded ? 'nav-open' : 'nav-closed')]">
-		<li class="nav-item">
-			<!-- literal string -->
-			<b-link class="nav-link" to="/index">Index</b-link>
-		</li>
-		<li class="nav-item">
-			<b-link class="nav-link" to="/local-media">Local Media</b-link>
-		</li>
-		<li class="nav-item">
-			<b-link class="nav-link disabled">API's</b-link>
-		</li>
-		<li class="nav-item">
-			<b-link class="nav-link" to="/movie-list/dreamovies">Dreamovies</b-link>
-		</li>
-		<li class="nav-item">
-			<b-link class="nav-link" to="/movie-list/eztv">EZTV</b-link>
-		</li>
-		<li class="nav-item">
-			<b-link class="nav-link" to="/movie-list/yts">YTS</b-link>
-		</li>
-		<b-nav-item v-for="item in list">{{ item.config.label }}</b-nav-item>
+		<b-nav-item class="text-white" to="/index">Home</b-nav-item>
+		<b-nav-item class="text-white" to="/local-media">Local Media</b-nav-item>
+		<b-dropdown-header>API's</b-dropdown-header>
+		<b-nav-item v-for="item in list" :key="item.config.name" class="text-white" :to="'/' + item.config.type + '-list/' + item.config.name">{{ item.config.label }}</b-nav-item>
 	</ul>
 </template>
 
@@ -38,6 +22,7 @@
 			this.list = this.$plugins;
 		},
 		methods: {
+
 			// open(link) {
 			// this.link = link;
 			// require('electron').shell.openExternal(link);

@@ -38,44 +38,69 @@
                     quality: [],
                     sort_by: [],
                     keyword: ""
+                },
+                params: {
+                    type: "movie",
+                    page: 1,
+                    filters: {
+                        limit: 30,
+                        order_by: "",
+                        genre: "",
+                        quality: "",
+                        sort_by: "",
+                        keyword: ""
+                    }
                 }
             }
         },
         created() {
-            this.loadList(this.$route.params.plugin);
-        },
-        methods: {
-            loadList(plugin) {
-                if(services.check_plugin(plugin)){
-                    this.currentPlugin = plugin;
-                    this.changePage(this.currentPage);
-                    this.config = services.loadConfig(this.currentPlugin);
-                    console.log(this.config);
-                    if(this.config.hasFilters) {
-                        this.filters = services.loadFilters(this.currentPlugin);
-                        console.log(this.filters);
-                    }
+            Event.$on('search-trigger', (param) => {
+                this.params.filters = param;
+                this.changePage();
+            });
+            console.log("created: " + this.$route.params.plugin);
+            //if(services.check_plugin(plugin)){
+            //Load and validate plugin
+            this.currentPlugin = this.$route.params.plugin;
+            if(this.$plugins[this.currentPlugin] !== undefined) {
+                this.config = this.$plugins[this.currentPlugin].config;
+                //Load Plugin Config
+                console.log(this.config);
+                if(this.config.hasFilters) {
+                    this.filters = this.$plugins[this.currentPlugin].filters();
+                    console.log(this.filters);
                 }
-            },
-            changePage(page){
-                services.loadList(this.currentPlugin, page)
-                        .then((response) => {
-                            var resp = response.data.data;
-                            this.currentPage = resp.page_number;
-                            this.perPage = resp.limit;
-                            this.totalRow = resp.movie_count;
-                            this.list = resp.movies;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        }).then(function () {
-                            // always executed
-                        });
+                //Load Plugin List
+                this.loadList();
+            } else {
+
             }
-            // open(link) {
-            // this.link = link;
-            // require('electron').shell.openExternal(link);
-            // },
+        },
+        //updated() {
+        //    console.log("updated: " + this.$route.params.plugin);
+        //    this.loadList(this.$route.params.plugin);
+        //},
+        methods: {
+            loadList() {
+                this.params.page = this.currentPage;
+                this.changePage();
+            },
+            changePage(){
+                /*services.loadList(this.currentPlugin, page)*/
+                this.$plugins[this.currentPlugin].list(this.params)
+                    .then((response) => {
+                        var resp = response.data.data;
+                        this.currentPage = resp.page_number;
+                        this.perPage = resp.limit;
+                        this.totalRow = resp.movie_count;
+                        this.list = resp.movies;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    }).then(function () {
+                        // always executed
+                    });
+            },
         },
     };
 </script>

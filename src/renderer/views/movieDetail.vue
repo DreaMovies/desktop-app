@@ -1,5 +1,8 @@
 <template>
 	<div class="page-movie-detail">
+		<router-link :to="'/movie-list/' + params.plugin" class="return-to-list">
+			<i class="fas fa-arrow-left"></i>
+		</router-link>
 		<div class="movie-card" v-if="movie != ''">
 			<img :src="movie.medium_cover_image" alt="cover" class="cover" />
 			<div class="hero" :style="{ 'background-image': 'url(\'' + movie.background_image_original + '\')' }"></div>
@@ -36,7 +39,7 @@
 				<div class="column1">
 					<span class="tag" v-for="genre in movie.genres">{{ genre }}</span>
 
-					<span class="tag" v-for="torrent in movie.torrents">{{ torrent.quality }}</span>
+					<span class="tag" v-for="torrent in movie.torrents" @click="play('torrent', torrent.url)">{{ torrent.quality }}</span>
 				</div> <!-- end column1 -->
 				<div class="column2">
 					<p>{{ movie.description_full }}</p>
@@ -50,17 +53,27 @@
 					</div> <!-- end avatars -->
 				</div> <!-- end column2 -->
 			</div> <!-- end description -->
+
+			<AppTorrentDetails v-if="player.type == 'torrent' && player.link !== ''" :magnetUri="player.link"></AppTorrentDetails>
+			<!-- <torrentPlayer v-if="player.type == 'torrent'" :magnet="player.link" :info="player"></torrentPlayer> -->
+			<embedPlayer v-if="player.type == 'link'" :info="player"></embedPlayer>
 		</div> <!-- end movie-card -->
 	</div>
 </template>
 
 <script>
     import services from "@/services/";
+	import torrentPlayer from "../components/elements/torrent_player";
+	import embedPlayer from "../components/elements/embed_player";
+	import AppTorrentDetails from '../components/elements/torrent/torrent_detail';
 
 	export default {
 		name: 'movie-detail',
 		components: {
             services,
+			torrentPlayer,
+			embedPlayer,
+			AppTorrentDetails
 		},
 		data: function(){
 			return {
@@ -69,25 +82,36 @@
 					id: "",
 					imdb: ""
 				},
+				player: {
+					type: "",
+					link: ""
+				},
 				movie: {}
 			}
 		},
         created: function () {
+			//Load and validate plugin
             this.params.plugin = this.$route.params.plugin;
             this.params.id = 	this.$route.params.id;
             this.params.imdb = 	this.$route.params.imdb;
-            this.loadDetail();
+
+			if(this.$plugins[this.params.plugin] !== undefined) {
+				//Load Plugin Detail
+				this.loadDetail();
+			} else {
+
+			}
         },
         methods: {
             loadDetail() {
-                if(services.check_plugin(this.params.plugin)){
-
-                	services.loadDetail(this.params)
-	                        .then((response) => {
-	                            this.movie = response.data.data.movie;
-	                        });
-                }
-            }
+				this.$plugins[this.params.plugin].details(this.params.id).then((response) => {
+					this.movie = response.data.data.movie;
+				});
+            },
+			play(type, link){
+				this.player.type = type;
+				this.player.link = link;
+			},
 			// 	open(link) {
 			// 		this.link = link;
 			// 		require('electron').shell.openExternal(link);

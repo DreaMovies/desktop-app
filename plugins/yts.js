@@ -1,4 +1,4 @@
-const axios	= require('axios');
+import axios from 'axios';
 
 export default {
     config: {
@@ -10,14 +10,13 @@ export default {
         type: "movies",
         player: "torrent"
     },
-	axios_dream: axios.create({
-		baseURL: 'https://api.dreamovies.tk/v2/',
-		timeout: 1000,
-		headers: {
-			'X-App': 'DreamoviesUploader/V1',
-			'Content-Type': 'application/x-www-form-urlencoded'
-		}
-	}),
+    axios_yts: axios.create({
+        baseURL: "https://yts.am/api/v2/",
+        timeout: 1000,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }),
     filters(){
         var filters = {
             order_by: {
@@ -136,7 +135,7 @@ export default {
         var filters = params.filters;
 
         // Optionally the request above could also be done as
-        return await this.axios_dream.get('/list/' + type, {
+        return await this.axios_yts.get('/list_movies.json', {
             params: {
                 limit: filters.limit,
                 page: page,
@@ -151,7 +150,7 @@ export default {
         });
     },
     async details(id){
-        return await this.axios_dream.get('/details/' + type + '/' + id, {
+        return await this.axios_yts.get('/movie_details.json', {
             params: {
                 movie_id: id,
                 with_images: true,
@@ -160,3 +159,13 @@ export default {
         });
     }
 };
+
+
+//$(document).on('click', '.yts-list .page-link', function (e) {
+//    var page = $(this).data('page');
+//    getList(page);
+//});
+//$(document).on('click', '.yts-list .torrent-download', function (e) {
+//    var torrent = $(this).data('link');
+//    //torrent_tool.previewFile(torrent);
+//});

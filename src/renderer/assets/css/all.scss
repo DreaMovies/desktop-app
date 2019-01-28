@@ -248,6 +248,15 @@ a {
 		bottom:0;
 		overflow-x:hidden;
 		padding-bottom:40px;
+		.nav-item{
+			a{
+				text-decoration: none;
+			}
+
+			&:hover{
+				color: #6a6a6a;
+			}
+		}
 	}
 }
 

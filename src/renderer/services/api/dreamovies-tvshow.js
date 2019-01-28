@@ -1,30 +1,30 @@
-import axios from 'axios';
+const axios	= require('axios');
 
 export default {
     config: {
-        name: "yts",
-        label: "YTS Movies",
+        name: "dreamovies-tvshow",
+        label: "Dreamovies (TvShows)",
         logo: "img.png",
         url: "https://yts.am/api/v2/",
         hasFilters: true,
-        type: "movie",
-        player: "torrent"
+        type: "tvshow",
+        player: ["torrent", "links"]
     },
-    axios_yts: axios.create({
-        baseURL: "https://yts.am/api/v2/",
-        timeout: 1000,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }),
+	axios_dream: axios.create({
+		baseURL: 'https://api.dreamovies.tk/v2/',
+		timeout: 1000,
+		headers: {
+			'X-App': 'DreamoviesUploader/V1',
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	}),
     filters(){
         var filters = {
             order_by: {
                 type: "list",
                 field: "order_by",
-                default: "latest",
+                placeholder: "Order By",
                 list: [
-                    { value: "latest",       label: "Order By (latest)",     disabled: true },
                     { value: "latest",       label: "Latest"        },
                     { value: "oldest",       label: "Oldest"        },
                     { value: "seeds",        label: "Seeds"         },
@@ -39,9 +39,8 @@ export default {
             genre: {
                 type: "list",
                 field: "genre",
-                default: "all",
+                placeholder: "Genres",
                 list: [
-                    { value: "all",         label: "Genres (All)",     disabled: true },
                     { value: "all",         label: "All"         },
                     { value: "action",      label: "Action"      },
                     { value: "adventure",   label: "Adventure"   },
@@ -74,22 +73,20 @@ export default {
             quality: {
                 type: "list",
                 field: "quality",
-                default: "all",
+                placeholder: "Quality",
                 list: [
-                    { value: "all",         label: "Quality (All)",   disabled: true },
                     { value: "720p,1080p",  label: "720p/1080p" },
-                    { value: "all",         label: "All"        },
-                    { value: "720p",        label: "720p"       },
-                    { value: "1080p",       label: "1080p"      },
-                    { value: "3D",          label: "3D"         }
+                    { value: "all",         label: "All"    },
+                    { value: "720p",        label: "720p"   },
+                    { value: "1080p",       label: "1080p"  },
+                    { value: "3D",          label: "3D"     }
                 ],
             },
             sort_by: {
                 type: "list",
                 field: "sort_by",
-                default: "date_added",
+                placeholder: "Sort By",
                 list: [
-                    { value: "date_added",      label: "Sort By (Date Added)", disabled: true },
                     { value: "date_added",      label: "Date Added"     },
                     { value: "title",           label: "Title"          },
                     { value: "year",            label: "Year"           },
@@ -103,7 +100,6 @@ export default {
             keyword: {
                 type: "text",
                 field: "keyword",
-                default: "",
                 placeholder: "Search by...",
             },
         };
@@ -120,9 +116,9 @@ export default {
 
         return filters;
     },
-    async list(params = {}){ //movie/tvshow/anime
-        const params_default = {
-            type: "movies",
+    async list(params = []){ //movie/tvshow/anime
+        var params_default = {
+            type: "movie",
             page: 1,
             filters: this.defaultFilters()
         }
@@ -137,17 +133,13 @@ export default {
             order_by			String 			(desc, asc)							desc		Orders the results by either Ascending or Descending order
             with_rt_ratings		Boolean												false		Returns the list with the Rotten Tomatoes rating included
         */
-        if(Object.entries(params).length == 0){
-            params = params_default;
-        } else {
-            var filters = params.filters;
-        }
+        var filters = params.filters;
 
         // Optionally the request above could also be done as
-        return await this.axios_yts.get('/list_movies.json', {
+        return await this.axios_dream.get('/list/' + type, {
             params: {
                 limit: filters.limit,
-                page: params.page,
+                page: page,
                 quality: filters.quality,
                 //minimum_rating: 0,
                 query_term: filters.keyword,
@@ -159,7 +151,7 @@ export default {
         });
     },
     async details(id){
-        return await this.axios_yts.get('/movie_details.json', {
+        return await this.axios_dream.get('/details/' + type + '/' + id, {
             params: {
                 movie_id: id,
                 with_images: true,
@@ -168,13 +160,3 @@ export default {
         });
     }
 };
-
-
-//$(document).on('click', '.yts-list .page-link', function (e) {
-//    var page = $(this).data('page');
-//    getList(page);
-//});
-//$(document).on('click', '.yts-list .torrent-download', function (e) {
-//    var torrent = $(this).data('link');
-//    //torrent_tool.previewFile(torrent);
-//});
