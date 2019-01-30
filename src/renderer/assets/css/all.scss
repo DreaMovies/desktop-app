@@ -58,6 +58,7 @@ a {
 		position: relative;
 		padding: 0;
 		margin: 70px 0 0 200px;
+		transition: all .3s ease-in-out;
 	}
 	/* Top bar */
 	.window-topbar {
@@ -233,7 +234,8 @@ a {
 	}
 	.navbar.header-top.fixed-top{
 		top: 30px;
-		height: 40px; 
+		height: 40px;
+		transition: all .3s ease-in-out;
 	}
 	/* Sidebar */
 	.navbar-nav.side-nav{
@@ -248,6 +250,7 @@ a {
 		bottom:0;
 		overflow-x:hidden;
 		padding-bottom:40px;
+		transition: all .3s ease-in-out;
 		.nav-item{
 			a{
 				text-decoration: none;
@@ -257,6 +260,23 @@ a {
 				color: #6a6a6a;
 			}
 		}
+	}
+}
+/* Layout with Player */
+.layout-player{
+	/* Hide Top Menu*/
+	.navbar.header-top.fixed-top{
+		top: -10px;
+	}
+	/* Hide Sidebar */
+	.navbar-nav.side-nav{
+		left: -200px;
+	}
+	/* Extend view container to the max */
+	.layout-app{
+		width: 100%;
+		height: calc( 100% - 30px );
+		margin: 30px 0 0 0;
 	}
 }
 

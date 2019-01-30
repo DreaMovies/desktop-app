@@ -22,9 +22,9 @@ export default {
             order_by: {
                 type: "list",
                 field: "order_by",
-                default: "latest",
+                default: "seeds",
                 list: [
-                    { value: "latest",       label: "Order By (latest)",     disabled: true },
+                    { value: "seeds",        label: "Order By (seeds)",     disabled: true },
                     { value: "latest",       label: "Latest"        },
                     { value: "oldest",       label: "Oldest"        },
                     { value: "seeds",        label: "Seeds"         },
@@ -157,6 +157,31 @@ export default {
                 //with_rt_ratings: true,
             }
         });
+    },
+
+    dataListConvert(response){
+        response = response.data;
+        var resp = {
+            page: response.page_number,
+            total: response.movie_count,
+            limit: response.limit,
+            list : []
+        };
+        var raw_list = response.movies;
+
+        Object.keys(raw_list).forEach(function(key) {
+            resp.list.push({
+                id: raw_list[key].id,
+                title: raw_list[key].title,
+                poster: raw_list[key].medium_cover_image,
+                rating: raw_list[key].rating,
+                year: raw_list[key].year,
+                imdb: raw_list[key].imdb_code,
+                runtime: raw_list[key].runtime,
+            });
+        });
+
+        return resp;
     },
     async details(id){
         return await this.axios_yts.get('/movie_details.json', {

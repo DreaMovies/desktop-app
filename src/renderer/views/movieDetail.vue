@@ -39,7 +39,24 @@
 				<div class="column1">
 					<span class="tag" v-for="genre in movie.genres">{{ genre }}</span>
 
-					<span class="tag" v-for="torrent in movie.torrents" @click="play('torrent', torrent.url)">{{ torrent.quality }}</span>
+					<router-link
+							class="tag download-item"
+							v-for="torrent in movie.torrents"
+							:to="{
+								name: 'player',
+								params: {
+									detail: {
+										type: 'movie',
+										plugin: params.plugin,
+										imdb_code: movie.imdb_code,
+										id: movie.id
+									},
+									title: movie.title,
+									magnetUri: torrent.url
+								}
+							}" >
+						{{ torrent.quality }}
+					</router-link>
 				</div> <!-- end column1 -->
 				<div class="column2">
 					<p>{{ movie.description_full }}</p>
@@ -53,27 +70,16 @@
 					</div> <!-- end avatars -->
 				</div> <!-- end column2 -->
 			</div> <!-- end description -->
-
-			<AppTorrentDetails v-if="player.type == 'torrent' && player.link !== ''" :magnetUri="player.link"></AppTorrentDetails>
-			<!-- <torrentPlayer v-if="player.type == 'torrent'" :magnet="player.link" :info="player"></torrentPlayer> -->
-			<embedPlayer v-if="player.type == 'link'" :info="player"></embedPlayer>
 		</div> <!-- end movie-card -->
 	</div>
 </template>
 
 <script>
-    import services from "@/services/";
-	import torrentPlayer from "../components/elements/torrent_player";
-	import embedPlayer from "../components/elements/embed_player";
-	import AppTorrentDetails from '../components/elements/torrent/torrent_detail';
 
 	export default {
 		name: 'movie-detail',
 		components: {
-            services,
-			torrentPlayer,
-			embedPlayer,
-			AppTorrentDetails
+
 		},
 		data: function(){
 			return {
@@ -81,10 +87,6 @@
 					plugin: "",
 					id: "",
 					imdb: ""
-				},
-				player: {
-					type: "",
-					link: ""
 				},
 				movie: {}
 			}
@@ -108,14 +110,6 @@
 					this.movie = response.data.data.movie;
 				});
             },
-			play(type, link){
-				this.player.type = type;
-				this.player.link = link;
-			},
-			// 	open(link) {
-			// 		this.link = link;
-			// 		require('electron').shell.openExternal(link);
-			// 	},
 		},
 	};
 </script>

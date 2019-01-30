@@ -5,7 +5,7 @@
 
         <ul v-if="list != ''" class="movie-list">
             <li v-for="item in list">
-                <itemMovie :plugin="currentPlugin" :movie="item"></itemMovie>
+                <itemList :plugin="currentPlugin" :item="item" type="movie"></itemList>
             </li>
         </ul>
         <b-pagination @change="changePage" align="center" :total-rows="totalRow" v-model="currentPage" :per-page="perPage"></b-pagination>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import itemMovie from "../components/elements/item_movie";
+    import itemList from "../components/elements/item_list";
     import listFilters from "../components/elements/list_filters";
     import services from "@/services/";
 
@@ -22,7 +22,7 @@
         components: {
             services,
             listFilters,
-            itemMovie
+            itemList
         },
         data() {
             return {
@@ -87,13 +87,15 @@
             },
             changePage(){
                 /*services.loadList(this.currentPlugin, page)*/
+                this.params.page = this.currentPage;
                 this.$plugins[this.currentPlugin].list(this.params)
                     .then((response) => {
-                        var resp = response.data.data;
-                        this.currentPage = resp.page_number;
+                        var resp = this.$plugins[this.currentPlugin].dataListConvert(response.data);
+
+                        this.currentPage = resp.page;
                         this.perPage = resp.limit;
-                        this.totalRow = resp.movie_count;
-                        this.list = resp.movies;
+                        this.totalRow = resp.total;
+                        this.list = resp.list;
                     })
                     .catch(function (error) {
                         console.log(error);

@@ -10,8 +10,9 @@ import tvshowList 	from '@/views/tvshowList';
 import tvshowDetail from '@/views/tvshowDetail';
 import settings 	from '@/views/settings';
 import downloads 	from '@/views/downloads';
+import player 		from '@/views/player';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
 	routes: [
@@ -31,7 +32,7 @@ export default new Router({
 			component: movieList
 		},
 		{
-			path: '/movie-detail/:plugin/:imdb/:id',
+			path: '/movie-detail/:plugin/:id',
 			name: 'movie-detail',
 			component: movieDetail
 		},
@@ -41,7 +42,7 @@ export default new Router({
 			component: tvshowList
 		},
 		{
-			path: '/tvshow-detail/:plugin/:imdb/:id',
+			path: '/tvshow-detail/:plugin/:id',
 			name: 'tvshow-detail',
 			component: tvshowDetail
 		},
@@ -49,6 +50,12 @@ export default new Router({
 			path: '/downloads',
 			name: 'downloads',
 			component: downloads
+		},
+		{
+			path: '/player',
+			name: 'player',
+			component: player,
+			props: true,
 		},
 		{
 			path: '/settings',
