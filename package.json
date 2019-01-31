@@ -1,6 +1,6 @@
 {
-	"name": "dreamovies_app_alpha",
-	"version": "0.0.1",
+	"name": "dreamovies_app",
+	"version": "0.1.0",
 	"author": "SrPatinhas <srpatinhas>",
 	"description": "A Dreamovies project to help users to see better content and from more sources",
 	"license": "GPL",
@@ -22,7 +22,7 @@
 		"postinstall": ""
 	},
 	"build": {
-		"productName": "dreamovies_app_alpha",
+		"productName": "dreamovies_app",
 		"appId": "app.alpha.dreamovies",
 		"directories": {
 			"output": "build"
