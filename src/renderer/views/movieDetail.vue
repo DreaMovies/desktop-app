@@ -37,10 +37,11 @@
 			</div> <!-- end hero -->
 			<div class="description">
 				<div class="column1">
+					<h4>Genres</h4>
 					<span class="tag" v-for="genre in movie.genres">{{ genre }}</span>
-
+					<h4>Sources</h4>
 					<router-link
-							class="tag download-item"
+							class="tag download-item bg-primary text-white"
 							v-for="torrent in movie.torrents"
 							:to="{
 								name: 'player',
@@ -52,7 +53,8 @@
 										id: movie.id
 									},
 									title: movie.title,
-									magnetUri: torrent.url
+									magnetUri: torrent.url,
+									type: 'torrent'
 								}
 							}" >
 						{{ torrent.quality }}

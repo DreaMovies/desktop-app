@@ -1,7 +1,7 @@
 <template>
     <div class="page-player">
         <div class="player-title">
-            <router-link :to="'/' + detail.type + '-detail/' + detail.plugin + '/' + detail.imdb_code + '/' + detail.id" class="return-to-list">
+            <router-link :to="'/' + detail.type + '-detail/' + detail.plugin + '/' + detail.id" class="return-to-list">
                 <i class="fas fa-arrow-left"></i>
             </router-link>
             <span> {{ title }} </span>
@@ -47,12 +47,13 @@
         props: [
             'detail',
             'title',
-            'magnetUri'
+            'url',
+	        'magnetUri',
+	        'type'
         ],
         data(){
             return{
                 player: '',
-                url: 'https://someurl.com',
                 volume: 1,
                 links: [],
                 progress: {
@@ -82,46 +83,53 @@
 
             this.toggleBodyClass('addClass', 'layout-player');
 
-            var vm = this;
-            console.log("Mount Player");
-            var check_torrent = client.get(this.magnetUri);
-            console.log(check_torrent);
+            if(this.type == "torrent") {
+	            var vm = this;
+	            console.log("Mount WebTorrent");
+	            var check_torrent = client.get(this.magnetUri);
+	            console.log(check_torrent);
 
-            client.add(
-                this.magnetUri,
-                {
-                    announce: ['ws://127.0.0.1:8800/announce'],
-                    path: vm.download_folder
-                },
-                function (torrent) {//, path: '/Downloads/'
-                    console.log("Start Torrent Download");
-                    vm.torrent = torrent;
-                    console.log(torrent);
-                    setTimeout(vm.updateProgress, 500);
-                    // Torrents can contain many files. Let's use the .mp4 file
-                    const file = torrent.files.find(function (file) {
-                        console.log(file);
-                        if( file.name.endsWith('.mp4') ){
-                            return file.name.endsWith('.mp4');
-                        } else if( file.name.endsWith('.mkv') ){
-                            return file.name.endsWith('.mkv');
-                        } else if( file.name.endsWith('.avi') ){
-                            return file.name.endsWith('.avi');
-                        }
-                    });
-                    console.log("Torrent Get Blob URL");
-                    file.getBlobURL(function (err, url) {
-                        if (err) throw err;
-                        vm.link = url;
-                        console.log("Set Player URL: " + url);
-                        vm.player.src({
-                            type: 'video/mp4',
-                            'src': url
-                        });
-                        vm.playerPlay();
-                    });
-                }
-            );
+	            client.add(
+		            this.magnetUri,
+		            {
+			            announce: ['ws://127.0.0.1:8800/announce'],
+			            path: vm.download_folder
+		            },
+		            function (torrent) {//, path: '/Downloads/'
+			            console.log("Start Torrent Download");
+			            vm.torrent = torrent;
+			            console.log(torrent);
+			            setTimeout(vm.updateProgress, 500);
+			            // Torrents can contain many files. Let's use the .mp4 file
+			            const file = torrent.files.find(function (file) {
+				            console.log(file);
+				            if (file.name.endsWith('.mp4')) {
+					            return file.name.endsWith('.mp4');
+				            } else if (file.name.endsWith('.mkv')) {
+					            return file.name.endsWith('.mkv');
+				            } else if (file.name.endsWith('.avi')) {
+					            return file.name.endsWith('.avi');
+				            }
+			            });
+			            console.log("Torrent Get Blob URL");
+			            file.getBlobURL(function (err, url) {
+				            if (err) throw err;
+				            vm.link = url;
+				            console.log("Set Player URL: " + url);
+				            vm.player.src({
+					            type: 'video/mp4',
+					            'src': url
+				            });
+				            vm.playerPlay();
+			            });
+		            }
+	            );
+            } else {
+	            this.player.src({
+		            type: 'video/mp4',
+		            'src': this.url
+	            });
+            }
         },
         methods: {
             /* Change Layout for player */
@@ -365,8 +373,12 @@
             console.log("Component destruction begin");
             this.playerDispose();
             console.log("Player Destroyed");
-            client.remove(this.torrent);
-            console.log("Torrent Destroyed");
+            if(client.torrents.length) {
+	            client.torrents.foreach(function (torrent) {
+		            client.remove(torrent);
+	            });
+	            console.log("Torrent Client Destroyed");
+            }
         },
         destroyed() {
             this.toggleBodyClass('removeClass', 'layout-player');

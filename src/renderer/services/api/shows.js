@@ -152,7 +152,7 @@ export default {
 				season: response.seasons[key].season_number,
 				episode_count: response.seasons[key].episode_count,
 				poster: img_poster + response.seasons[key].poster_path,
-				episodes: self.episodesBySeason(response.id, response.seasons[key].season_number).then(function(episodes){self.dataEpisodeBySeasonConvert(episodes)})
+				episodes: []
 			});
 		});
 		Object.keys(response.credits.cast).forEach(function (key) {
@@ -715,9 +715,6 @@ export default {
 				append_to_response: "external_ids,content_ratings,keywords,credits"
 			}
 		});
-		console.log("Request: ");
-		console.log(response);
-		return this.dataEpisodeBySeasonConvert(response.data);
 	},
 
 	dataEpisodeBySeasonConvert(response) {
@@ -728,7 +725,7 @@ export default {
 		Object.keys(response.episodes).forEach(function (key) {
 			resp.push({
 				id:             response.episodes[key].id,
-				name:           response.episodes[key].name,
+				title:          response.episodes[key].name,
 				overview:       response.episodes[key].overview,
 				poster:         img_poster + response.episodes[key].still_path,
 				aired:          response.episodes[key].air_date,
@@ -766,5 +763,17 @@ export default {
 				"season_number": 1
 			};
 		*/
+	},
+
+	async getSources(id, season, episode){
+		return [];
+		console.log(id + " - " + season);
+		return await this.axios_tmdb.get('/tv/' + id + '/season/' + season, {
+			params: {
+				api_key: this.config.api_key,
+				language: 'en-US',
+				append_to_response: "external_ids,content_ratings,keywords,credits"
+			}
+		});
 	},
 };

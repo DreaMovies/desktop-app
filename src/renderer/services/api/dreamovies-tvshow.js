@@ -158,5 +158,15 @@ export default {
                 with_cast: true
             }
         });
-    }
+    },
+
+
+	async getSources(id, season, episode){
+    	return [];
+		//return await this.axios_dream.get('/get-torrents', {
+		//	params: {
+		//		imdb_id: id.replace(/\D/g,'')
+		//	}
+		//});
+	},
 };

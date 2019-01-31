@@ -11,6 +11,8 @@ import tvshowDetail from '@/views/tvshowDetail';
 import settings 	from '@/views/settings';
 import downloads 	from '@/views/downloads';
 import player 		from '@/views/player';
+import chat 		from '@/views/chat';
+import fileExplorer	from '@/views/file-explorer';
 
 Vue.use(Router);
 
@@ -20,6 +22,11 @@ export default new Router({
 			path: '/',
 			name: 'index',
 			component: require('@/views/').default
+		},
+		{
+			path: '/explorer',
+			name: 'explorer',
+			component: fileExplorer
 		},
 		{
 			path: '/local-media',
@@ -61,6 +68,11 @@ export default new Router({
 			path: '/settings',
 			name: 'settings',
 			component: settings
+		},
+		{
+			path: '/chat',
+			name: 'chat',
+			component: chat
 		},
 		{
 			path: '*',

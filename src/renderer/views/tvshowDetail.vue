@@ -1,5 +1,6 @@
 <template>
 	<div class="page-tvshow-detail">
+		<sourcesModal></sourcesModal>
 		<router-link :to="'/tvshow-list/' + params.plugin" class="return-to-list">
 			<i class="fas fa-arrow-left"></i>
 		</router-link>
@@ -57,38 +58,50 @@
 					</div> <!-- end avatars -->
 
 
-					<div class="seasons-list">
-
-						<b-card no-body>
-							<b-tabs card>
-
-								<b-tab v-for="season in tvshow.seasons" :title="'Season ' + season.season">
-									<b-card-header>{{ season.episode_count }}</b-card-header>
-									<b-card-img><img :src="season.poster" :alt="season.name"></b-card-img>
-									<b-card-body>
-										<itemEpisode v-for="episode in season.episodes" :item="episode" type="tvshow-detail" :plugin="params.plugin"></itemEpisode>
-									</b-card-body>
-									<b-card-footer>{{ season.overview }}</b-card-footer>
-								</b-tab>
-
-							</b-tabs>
-						</b-card>
-
-					</div>
 				</div> <!-- end column2 -->
 			</div> <!-- end description -->
 		</div> <!-- end tvshow-card -->
+		<div class="seasons-list">
+
+			<b-card no-body>
+				<b-tabs card>
+
+					<b-tab
+						v-for="(season, index) in tvshow.seasons"
+						:title="'Season ' + season.season"
+						@click="loadSeasonEpisodes(index, season.season)">
+						<div v-if="season.episodes.length == 0" class="loading">
+							<loading center="true" page="false"></loading>
+						</div>
+						<div v-else>
+							<b-card-header>{{ season.episode_count }}</b-card-header>
+							<b-card-img><img :src="season.poster" :alt="season.name"></b-card-img>
+							<b-card-body>
+								<itemEpisode v-for="episode in season.episodes" :item="episode" type="tvshow-detail" :plugin="params.plugin"></itemEpisode>
+							</b-card-body>
+							<b-card-footer>{{ season.overview }}</b-card-footer>
+						</div>
+					</b-tab>
+
+				</b-tabs>
+			</b-card>
+
+		</div>
 	</div>
 </template>
 
 <script>
 
 	import itemEpisode from "../components/elements/item_episode";
+	import loading from "../components/elements/loading";
+	import sourcesModal from "../components/elements/sources";
 
 	export default {
 		name: 'tvshow-detail',
 		components: {
-			itemEpisode
+			itemEpisode,
+			loading,
+			sourcesModal
 		},
 		data: function () {
 			return {
@@ -134,11 +147,17 @@
 						poster: "",
 						episodes: [
 							{
-								id: 0,
-								title: '',
-								poster: '',
-								links: [],
-								torrents: []
+								id:             0,
+								name:           "",
+								overview:       "",
+								poster:         "",
+								aired:          "",
+								episode_number: "",
+								season_number:  "",
+								rating:         "",
+								votes:          "",
+								links:      [],
+								torrents:   []
 							}
 						]
 					}],
@@ -155,7 +174,7 @@
 				}
 			}
 		},
-		created: function () {
+		created() {
 			//Load and validate plugin
 			this.params.plugin = this.$route.params.plugin;
 			this.params.id = this.$route.params.id;
@@ -167,6 +186,20 @@
 			} else {
 
 			}
+			var Self = this;
+			Event.$on("sources-get", function (params) {
+				console.log(params);
+				const info = {
+					type: "tvshow",
+					screen: "tvshow-detail",
+					plugin: Self.params.plugin,
+					id: Self.tvshow.id,
+					imdb: Self.tvshow.ids.imdb_id,
+					episode: params.episode,
+					season: params.season,
+				}
+				Event.$emit('sources-open', info);
+			});
 		},
 		methods: {
 			loadDetail() {
@@ -176,10 +209,23 @@
 						this.tvshow = this.$plugins[this.params.plugin].dataDetailConvert(response.data);
 					});
 			},
+			loadSeasonEpisodes(index, season){
+				var self = this;
+				if(this.tvshow.seasons[index].episodes.length == 0) {
+					this.$plugins[this.params.plugin]
+						.episodesBySeason(this.tvshow.id, season)
+						.then(function (response) {
+							self.tvshow.seasons[index].episodes = self.$plugins[self.params.plugin].dataEpisodeBySeasonConvert(response.data);
+						});
+				}
+			}
 			// 	open(link) {
 			// 		this.link = link;
 			// 		require('electron').shell.openExternal(link);
 			// 	},
+		},
+		beforeDestroy(){
+			Event.$off("sources-get");
 		},
 	};
 </script>

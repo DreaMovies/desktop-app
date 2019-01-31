@@ -54,7 +54,7 @@
             }
         },
         created() {
-            Event.$on('search-trigger', (param) => {
+            Event.$on('movie::search-trigger', (param) => {
                 this.params.filters = param;
                 this.changePage();
             });
@@ -63,35 +63,23 @@
             //Load and validate plugin
             this.currentPlugin = this.$route.params.plugin;
             if(this.$plugins[this.currentPlugin] !== undefined) {
-                this.config = this.$plugins[this.currentPlugin].config;
-                //Load Plugin Config
-                console.log(this.config);
+                this.config = this.$plugins[this.currentPlugin].config;//Load Plugin Config
                 if(this.config.hasFilters) {
                     this.filters = this.$plugins[this.currentPlugin].filters();
-                    console.log(this.filters);
                 }
-                //Load Plugin List
-                this.loadList();
-            } else {
-
+                this.loadList();//Load Plugin List
             }
         },
-        //updated() {
-        //    console.log("updated: " + this.$route.params.plugin);
-        //    this.loadList(this.$route.params.plugin);
-        //},
         methods: {
             loadList() {
                 this.params.page = this.currentPage;
                 this.changePage();
             },
             changePage(){
-                /*services.loadList(this.currentPlugin, page)*/
                 this.params.page = this.currentPage;
                 this.$plugins[this.currentPlugin].list(this.params)
                     .then((response) => {
                         var resp = this.$plugins[this.currentPlugin].dataListConvert(response.data);
-
                         this.currentPage = resp.page;
                         this.perPage = resp.limit;
                         this.totalRow = resp.total;
@@ -99,8 +87,6 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                    }).then(function () {
-                        // always executed
                     });
             },
         },

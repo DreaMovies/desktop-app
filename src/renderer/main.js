@@ -17,11 +17,11 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 
 //Database Initializer
-import { task, setting, done } from './datastore';
+import { settings, cache, downloads } from './datastore';
 Vue.prototype.$db = {
-    task,
-    setting,
-    done
+	settings,
+	cache,
+    downloads
 }; //just use this.$db to access it
 
 //WebTorrent Initializer

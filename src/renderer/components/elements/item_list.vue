@@ -1,7 +1,7 @@
 <template>
 	<b-link 
 		class="list-item card"
-		:to="'/' + type + '-detail/' + plugin + '/' + item.id + '/' + item.imdb"
+		:to="'/' + type + '-detail/' + plugin + '/' + item.id"
 		:style="{ 'background-image': 'url(\'' + item.poster + '\')' }">
 		<div class="info">
 			<span class="year">{{ item.year }}</span>

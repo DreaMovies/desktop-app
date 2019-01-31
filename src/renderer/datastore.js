@@ -2,17 +2,17 @@ import Datastore from 'nedb';
 import path from 'path';
 import { remote } from 'electron';
 
-export const task = new Datastore({
+export const cache = new Datastore({
 	autoload: true,
-	filename: path.join(remote.app.getPath('userData'), '/tasks.db')
+	filename: path.join(remote.app.getPath('userData'), '/cache.db')
 })
 
-export const done = new Datastore({
+export const downloads = new Datastore({
 	autoload: true,
-	filename: path.join(remote.app.getPath('userData'), '/done.db')
+	filename: path.join(remote.app.getPath('userData'), '/downloads.db')
 })
 
-export const setting = new Datastore({
+export const settings = new Datastore({
 	autoload: true,
-	filename: path.join(remote.app.getPath('userData'), '/setting.db')
+	filename: path.join(remote.app.getPath('userData'), '/settings.db')
 })

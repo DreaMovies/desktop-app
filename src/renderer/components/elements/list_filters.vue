@@ -65,7 +65,7 @@
 		},
 		methods: {
 			search(){
-				Event.$emit('search-trigger', this.params);
+				Event.$emit('movie::search-trigger', this.params);
 			}
 		},
 	};

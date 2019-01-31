@@ -18,7 +18,7 @@ export default {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 	}),
-	async list(params = {}){ //movie/tvshow/anime
+	async list(params = {}) { //movie/tvshow/anime
 		/*
 		 * List torrents by date:
 		 * 	https://eztv.io/api/get-torrents?limit=10&page=1&imdb_id=6048596
@@ -58,7 +58,7 @@ export default {
 			}
 		})
 	},
-	async details(id){
+	async details(id) {
 		return await this.axios_eztv.get('/movie_details.json', {
 			params: {
 				movie_id: id,
@@ -66,5 +66,83 @@ export default {
 				with_cast: true
 			}
 		});
-	}
+	},
+
+
+	async getSources(id, page = 1) {
+		return await this.axios_eztv.get('/get-torrents', {
+			params: {
+				imdb_id: id.replace(/\D/g, ''),
+				page: page,
+				limit: 100
+			}
+		});
+	},
+
+
+	dataSourceConvert(response, info) {
+		var sources = {
+			page: response.page,
+			count: response.torrents_count,
+			total_pages: Math.ceil(response.torrents_count / response.limit),
+			list: []
+		};
+
+		Object.keys(response.torrents).forEach(function (key) {
+			if( response.torrents[key].season == info.season && response.torrents[key].episode == info.episode ) {
+				sources.list.push({
+					type: "torrent",
+					id: response.torrents[key].id,
+					hash: response.torrents[key].hash,
+					source: {
+						torrent_url: response.torrents[key].torrent_url,
+						magnet_uri: response.torrents[key].magnet_url,
+						url: "",
+					},
+					content: {
+						title: response.torrents[key].title,
+						season: response.torrents[key].season,
+						episode: response.torrents[key].episode,
+					},
+					file: {
+						quality: "",
+						filename: response.torrents[key].filename,
+						seeds: response.torrents[key].seeds,
+						peers: response.torrents[key].peers,
+						released: response.torrents[key].date_released_unix,
+						size: response.torrents[key].size_bytes,
+					},
+				});
+			}
+		});
+		return sources;
+		/*
+			var example = {
+				"imdb_id": "5420376",
+				"torrents_count": 164,
+				"limit": 30,
+				"page": 1,
+				"torrents": [
+					{
+						"id": 1307313,
+						"hash": "a8abc4ab73f1f5d00c677aa02d4281025db30fc8",
+						"filename": "Riverdale.US.S03E11.iNTERNAL.480p.x264-mSD[eztv].mkv",
+						"episode_url": "https://eztv.io/ep/1307313/riverdale-us-s03e11-internal-480p-x264-msd/",
+						"torrent_url": "https://zoink.ch/torrent/Riverdale.US.S03E11.iNTERNAL.480p.x264-mSD[eztv].mkv.torrent",
+						"magnet_url": "magnet:?xt=urn:btih:a8abc4ab73f1f5d00c677aa02d4281025db30fc8&dn=Riverdale.US.S03E11.iNTERNAL.480p.x264-mSD%5Beztv%5D&tr=udp://tracker.coppersurfer.tk:80&tr=udp://glotorrents.pw:6969/announce&tr=udp://tracker.leechers-paradise.org:6969&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://exodus.desync.com:6969",
+						"title": "Riverdale US S03E11 iNTERNAL 480p x264-mSD EZTV",
+						"imdb_id": "5420376",
+						"season": "3",
+						"episode": "11",
+						"small_screenshot": "//ezimg.ch/thumbs/riverdale-us-s03e11-internal-480p-x264-msd-small.jpg",
+						"large_screenshot": "//ezimg.ch/thumbs/riverdale-us-s03e11-internal-480p-x264-msd-large.jpg",
+						"seeds": 159,
+						"peers": 92,
+						"date_released_unix": 1548919700,
+						"size_bytes": "102661022"
+					},
+				]
+			}
+		*/
+	},
 };
