@@ -374,8 +374,9 @@
             this.playerDispose();
             console.log("Player Destroyed");
             if(client.torrents.length) {
-	            client.torrents.foreach(function (torrent) {
-		            client.remove(torrent);
+	            var torrents = client.torrents;
+	            torrents.foreach(function (torrent) {
+		            client.remove(torrent.hash);
 	            });
 	            console.log("Torrent Client Destroyed");
             }

@@ -829,3 +829,55 @@
     display: block;
   }
 }
+
+/*
+ Chat
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+
+$font: 'Lato', sans-serif;
+
+$primary: #79C7C5;
+$secondary: #A1E2D9;
+$white: #F9FBFF;
+$dark: #777777;
+.typing {
+  position: absolute;
+  top: 67%;
+  left: 20px;
+  .bubble {
+    background: lighten($dark, 45%);
+    padding: 8px 13px 9px 13px;
+  }
+}
+
+
+.ellipsis {
+  width: 5px;
+  height: 5px;
+  display: inline-block;
+  background: lighten($dark, 25%);
+  border-radius: 50%;
+  animation: bounce 1.3s linear infinite;
+}
+
+.one {
+  animation-delay: 0.6s;
+}
+.two {
+  animation-delay: 0.5s;
+}
+.three {
+  animation-delay: 0.8s;
+}
+
+.bubble {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 5px;
+  color: $white;
+  font-size: 0.7em;
+  padding: 10px 10px 10px 12px;
+  border-radius: 20px;
+}
