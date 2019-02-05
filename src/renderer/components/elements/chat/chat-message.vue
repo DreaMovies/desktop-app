@@ -1,14 +1,13 @@
 <template>
 
 	<li class="clearfix">
-		<div :class="'message-data ' + (message.sent ? '' : 'align-right')">
-			<span class="message-data-time" >{{ message.date }}</span> &nbsp; &nbsp;
-			<span class="message-data-name" >{{ user.name }}</span>
-			<i :class="'fa fa-circle' + (message.sent ? 'me' : user.status)"></i>
-
+		<div :class="'message-data ' + (message.username == username ? 'align-right' : '' )">
+			<span v-if="message.username !== username" class="message-data-name" >{{ message.username }}</span>
+			<span class="message-data-time" >{{ message.date }}</span>
+			<span v-if="message.username == username" class="message-data-name" >{{ message.username }}</span>
 		</div>
-		<div class="message other-message float-right">
-			{{ message.text }}
+		<div :class="'message ' + (message.username == username ? ' other-message float-right' : ' my-message')">
+			{{ message.message }}
 		</div>
 	</li>
 
@@ -21,6 +20,11 @@
 			'message',
 			'user'
 		],
+		data(){
+			return{
+				username: this.$user.username
+			};
+		},
 	}
 </script>
 

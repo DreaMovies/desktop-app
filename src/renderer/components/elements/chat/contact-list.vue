@@ -28,6 +28,7 @@
 		},
 		methods: {
 			selectPerson(key){
+				console.log(key);
 				if( this.persons[key].active == false ){
 					this.persons.filter(obj => {
 						if( obj.active === true ) {

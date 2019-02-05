@@ -31,6 +31,13 @@ client.on('error', err => {
 });
 Vue.prototype.$btClient = client;
 
+Vue.prototype.$user = {
+	id: "",
+	username: "SrPatinhas",
+	status: "offline",
+	avatar: ""
+};
+
 
 import plugins from './services/api/index.js';
 Vue.prototype.$plugins = plugins;
