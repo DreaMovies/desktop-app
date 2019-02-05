@@ -12,7 +12,7 @@ export default {
     },
     axios_yts: axios.create({
         baseURL: "https://yts.am/api/v2/",
-        timeout: 1000,
+        timeout: 5000,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }

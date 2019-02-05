@@ -16,7 +16,13 @@
 				@keyup.enter="sendMessage"
 				@keydown="meTyping">
 			</textarea>
-
+			<i class="far fa-smile" @click="showEmojis = !showEmojis"></i>
+			<div class="emoji-picker" v-show="showEmojis" @click="showEmojis = !showEmojis">
+				<picker
+					set="apple"
+					@select="addEmoji"
+					:style="{ position: 'absolute', bottom: '20px', right: '20px' }" />
+			</div>
 			<i class="fa fa-file-o"></i> &nbsp;&nbsp;&nbsp;
 			<i class="fa fa-file-image-o"></i>
 
@@ -27,14 +33,17 @@
 </template>
 
 <script>
+	import { Picker } from 'emoji-mart-vue';
 	import chatHeader from "./chat-header";
 	import chatMessage from "./chat-message";
+
 
 	export default {
 		name: "chat-list",
 		components: {
 			chatHeader,
-			chatMessage
+			chatMessage,
+			Picker
 		},
 		props: [
 			'info',
@@ -45,7 +54,8 @@
 			return{
 				person: {},
 				message: "",
-				room: ""
+				room: "",
+				showEmojis: false,
 			};
 		},
 		created() {
@@ -56,6 +66,9 @@
 			elem.scrollTop = elem.clientHeight;
 		},
 		methods: {
+			addEmoji(emoji){
+				this.message = this.message + emoji.native;
+			},
 			sendMessage(){
 				if(this.message != "") {
 					Event.$emit('chat::send-message', this.message);
@@ -63,7 +76,7 @@
 				}
 			},
 			meTyping(){
-				Event.$emit('"chat::typing', this.room)
+				Event.$emit('chat::typing', this.room)
 			}
 		},
 	}

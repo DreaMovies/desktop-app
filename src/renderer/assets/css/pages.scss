@@ -1394,6 +1394,13 @@ $gray: #92959E;
       }
     }
   }
+  .emoji-picker {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 
   .me {
     color: $blue;
@@ -1432,6 +1439,128 @@ $gray: #92959E;
     background-color: #8BC34A;
     border-radius: 13px;
     border: 3px solid #FAFAFA;
+  }
+
+  /* Calls */
+  #consultingRoom {
+    position: absolute;
+    background: #505050;
+    width: 100%;
+    height: 100%;
+    .close-call{
+      font-size: 18px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      height: 30px;
+      width: 30px;
+      background: #3e3e3e;
+      text-align: center;
+      border-radius: 50%;
+      padding: 5px;
+      display: block;
+      cursor: pointer;
+      z-index: 9;
+    }
+    .remote-video{
+      background: #5d5d5d;
+      width: 100%;
+      height: calc( 100% - 3px );
+      margin: 0;
+      padding: 0;
+      video {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        margin: 0;
+        padding: 0;
+      }
+      i{
+        position: absolute;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 10px;
+        font-size: 20px;
+        background: rgb(33, 33, 33);
+        text-align: center;
+        opacity: 0.6;
+        transition: all .3s ease-in-out;
+        &.fa-microphone{
+          left: calc( 50% - 30px);
+          &.is-disabled{
+            background: rgb(255, 0, 18);
+          }
+          &.is-enabled{
+
+          }
+        }
+        &.fa-video{
+          left: calc( 50% + 30px);
+          &.is-disabled{
+            background: rgb(255, 0, 18);
+          }
+          &.is-enabled{
+
+          }
+        }
+        &:hover{
+          cursor: pointer;
+          opacity: 1;
+        }
+      }
+    }
+    .local-video{
+      background: #616161;
+      width: 280px;
+      height: 200px;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      video {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        margin: 0;
+        padding: 0;
+      }
+      i{
+        position: absolute;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 10px;
+        font-size: 20px;
+        background: rgb(33, 33, 33);
+        text-align: center;
+        opacity: 0.6;
+        transition: all .3s ease-in-out;
+        &.fa-microphone{
+          left: calc( 50% - 30px);
+          &.is-disabled{
+            background: rgb(255, 0, 18);
+          }
+          &.is-enabled{
+
+          }
+        }
+        &.fa-video{
+          left: calc( 50% + 30px);
+          &.is-disabled{
+            background: rgb(255, 0, 18);
+          }
+          &.is-enabled{
+
+          }
+        }
+        &:hover{
+          cursor: pointer;
+          opacity: 1;
+        }
+      }
+    }
   }
 }
 

@@ -14,6 +14,10 @@
 </template>
 
 <script>
+	//import { Picker } from 'emoji-mart-vue';
+	// Maybe later change the icons to some defined by the user in the settings?
+	// Reference to replace emojis in text
+	// https://gist.github.com/jm-david/7f98c3ee4fe235c596cff26d7aa26b7b
 	export default {
 		name: "chat-message",
 		props: [

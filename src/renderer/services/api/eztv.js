@@ -12,7 +12,7 @@ export default {
 	},
 	axios_eztv: axios.create({
 		baseURL: 'https://eztv.io/api/',
-		timeout: 1000,
+		timeout: 5000,
 		headers: {
 			//'X-App': 'DreamoviesUploader/V1',
 			'Content-Type': 'application/x-www-form-urlencoded'

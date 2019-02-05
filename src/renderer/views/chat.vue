@@ -2,6 +2,27 @@
 	<div class="clearfix page-chat">
 		<contactList :persons="persons"></contactList>
 		<chatList :info="activePerson" :messages="messages" :typing="config.typing"></chatList>
+
+		<div id="selectRoom" v-if="call.RoomSelect">
+			<label>Type the room number</label>
+			<input id="roomNumber" type="text" v-model="call.roomNumber" />
+			<button id="goRoom" @click="joinRoom">Go</button>
+		</div>
+
+		<div id="consultingRoom"  v-if="!call.RoomSelect">
+			<i class="fas fa-times close-call" @click="stopCall"></i>
+			<div class="remote-video">
+				<video :muted="call.video.remote.muted" :src="call.video.remote.src" autoplay></video>
+				<i :class="'fas fa-microphone' + ( call.video.remote.muted ? ' is-disabled' : ' is-enabled')" @click="muteRemote"></i>
+				<i :class="'fas fa-video' + ( call.video.remote.streaming ? ' is-disabled' : ' is-enabled')" @click="stopStreamRemote"></i>
+			</div>
+			<div class="local-video">
+				<video :muted="call.video.local.muted" :src="call.video.local.src" autoplay></video>
+				<i :class="'fas fa-microphone' + ( call.video.local.muted ? ' is-disabled' : ' is-enabled')" @click="muteLocal"></i>
+				<i :class="'fas fa-video' + ( call.video.local.streaming ? ' is-disabled' : ' is-enabled')" @click="stopStreamLocal"></i>
+			</div>
+		</div>
+
 	</div>
 </template>
 
@@ -141,6 +162,38 @@
 					//$currentInput: $usernameInput.focus(),
 					socket : io('//dreamovies-chat-server.herokuapp.com'),
 					p2p: null
+				},
+
+				call: {
+					roomNumber: "",
+					RoomSelect: true,
+					video: {
+						local: {
+							src: '',
+							stream: '',
+							muted: true,
+							streaming: true
+						},
+						remote: {
+							src: '',
+							stream: '',
+							muted: true,
+							streaming: true
+						},
+					},
+					// variables
+					rtcPeerConnection: null,
+					iceServers: {
+						'iceServers': [
+							{ 'url': 'stun:stun.services.mozilla.com' },
+							{ 'url': 'stun:stun.l.google.com:19302' }
+						]
+					},
+					streamConstraints: {
+						audio: true,
+						video: true
+					},
+					isCaller: false,
 				}
 			};
 		},
@@ -212,6 +265,66 @@
 				console.log('attempt to reconnect has failed');
 				this.$user.status = "offline";
 			});
+
+			/* Calls listeners */
+			// message handlers
+			var Self = this;
+			this.config.socket.on('created', function (room) {
+				navigator.mediaDevices.getUserMedia(Self.call.streamConstraints).then(function (stream) {
+					Self.call.video.local.stream = stream;
+					Self.call.video.local.src    = URL.createObjectURL(stream);
+					Self.call.isCaller = true;
+				}).catch(function (err) {
+					console.log('An error ocurred when accessing media devices');
+				});
+			});
+
+			this.config.socket.on('joined', function (room) {
+				navigator.mediaDevices.getUserMedia(Self.call.streamConstraints).then(function (stream) {
+					Self.call.video.local.stream = stream;
+					Self.call.video.local.src    = URL.createObjectURL(stream);
+					Self.config.socket.emit('ready', Self.call.roomNumber);
+				}).catch(function (err) {
+					console.log('An error ocurred when accessing media devices');
+				});
+			});
+
+			this.config.socket.on('candidate', function (event) {
+				var candidate = new RTCIceCandidate({
+					sdpMLineIndex: event.label,
+					candidate: event.candidate
+				});
+				this.call.rtcPeerConnection.addIceCandidate(candidate);
+			});
+
+			this.config.socket.on('ready', function () {
+				if (this.call.isCaller) {
+					this.call.rtcPeerConnection = new RTCPeerConnection(this.call.iceServers);
+					this.call.rtcPeerConnection.onicecandidate = this.onIceCandidate;
+					this.call.rtcPeerConnection.onaddstream = this.onAddStream;
+					this.call.rtcPeerConnection.addStream(this.call.video.local.stream);
+					this.call.rtcPeerConnection.createOffer(this.setLocalAndOffer, function(e){
+						console.log(e);
+					});
+				}
+			});
+
+			this.config.socket.on('offer', function (event){
+				if(!this.call.isCaller){
+					this.call.rtcPeerConnection = new RTCPeerConnection(this.call.iceServers);
+					this.call.rtcPeerConnection.onicecandidate = this.onIceCandidate;
+					this.call.rtcPeerConnection.onaddstream = this.onAddStream;
+					this.call.rtcPeerConnection.addStream(this.call.video.local.stream);
+					this.call.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
+					this.call.rtcPeerConnection.createAnswer(this.setLocalAndAnswer, function(e){
+						console.log(e);
+					});
+				}
+			});
+
+			this.config.socket.on('answer', function (event){
+				this.call.rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
+			});
 		},
 		methods: {
 			changePerson(key){
@@ -270,6 +383,73 @@
 					}, this.config.TYPING_TIMER_LENGTH);
 				}
 			},
+
+
+			/* Calls handlers */
+			joinRoom() {
+				if (this.call.roomNumber === '') {
+					alert("Please type a room number")
+				} else {
+					this.config.socket.emit('create or join', this.call.roomNumber);
+					this.call.RoomSelect = false;
+				}
+			},
+
+			// handler functions
+			onIceCandidate(event) {
+				if (event.candidate) {
+					console.log('sending ice candidate');
+					socket.emit('candidate', {
+						type: 'candidate',
+						label: event.candidate.sdpMLineIndex,
+						id: event.candidate.sdpMid,
+						candidate: event.candidate.candidate,
+						room: this.call.roomNumber
+					})
+				}
+			},
+
+			onAddStream(event) {
+				this.call.video.remote.src    = URL.createObjectURL(event.stream);
+				this.call.video.remote.stream = event.stream;
+			},
+
+			setLocalAndOffer(sessionDescription) {
+				this.call.rtcPeerConnection.setLocalDescription(sessionDescription);
+				this.config.socket.emit('offer', {
+					type: 'offer',
+					sdp: sessionDescription,
+					room: this.call.roomNumber
+				});
+			},
+
+			setLocalAndAnswer(sessionDescription) {
+				this.call.rtcPeerConnection.setLocalDescription(sessionDescription);
+				this.config.socket.emit('answer', {
+					type: 'answer',
+					sdp: sessionDescription,
+					room: this.call.roomNumber
+				});
+			},
+
+			/* Video Calls Elements */
+			muteRemote(){
+				this.call.video.remote.muted = !this.call.video.remote.muted;
+
+			},
+			stopStreamRemote(){
+				this.call.video.remote.streaming = !this.call.video.remote.streaming;
+			},
+			muteLocal(){
+				this.call.video.local.muted = !this.call.video.local.muted;
+			},
+			stopStreamLocal(){
+				this.call.video.local.streaming = !this.call.video.local.streaming;
+			},
+			stopCall(){
+				this.call.RoomSelect = true;
+				//need to cancel call and close connection
+			}
 /*
 			addParticipantsMessage(data){
 				var message = '';

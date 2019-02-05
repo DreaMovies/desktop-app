@@ -40,7 +40,6 @@
     //import "videojs-contrib-hls";
 
     const videojs = window.videojs || _videojs;
-    var client = new WebTorrent();
 
     export default {
         name: 'player',
@@ -53,6 +52,9 @@
         ],
         data(){
             return{
+            	client: new WebTorrent(),
+	            server: null,
+
                 player: '',
                 volume: 1,
                 links: [],
@@ -84,45 +86,14 @@
             this.toggleBodyClass('addClass', 'layout-player');
 
             if(this.type == "torrent") {
-	            var vm = this;
 	            console.log("Mount WebTorrent");
-	            var check_torrent = client.get(this.magnetUri);
-	            console.log(check_torrent);
-
-	            client.add(
-		            this.magnetUri,
+	            this.client.add(
+	            	this.magnetUri,
 		            {
-			            announce: ['ws://127.0.0.1:8800/announce'],
-			            path: vm.download_folder
+		            	announce: ['ws://127.0.0.1:8800/announce'],
+			            path: this.download_folder
 		            },
-		            function (torrent) {//, path: '/Downloads/'
-			            console.log("Start Torrent Download");
-			            vm.torrent = torrent;
-			            console.log(torrent);
-			            setTimeout(vm.updateProgress, 500);
-			            // Torrents can contain many files. Let's use the .mp4 file
-			            const file = torrent.files.find(function (file) {
-				            console.log(file);
-				            if (file.name.endsWith('.mp4')) {
-					            return file.name.endsWith('.mp4');
-				            } else if (file.name.endsWith('.mkv')) {
-					            return file.name.endsWith('.mkv');
-				            } else if (file.name.endsWith('.avi')) {
-					            return file.name.endsWith('.avi');
-				            }
-			            });
-			            console.log("Torrent Get Blob URL");
-			            file.getBlobURL(function (err, url) {
-				            if (err) throw err;
-				            vm.link = url;
-				            console.log("Set Player URL: " + url);
-				            vm.player.src({
-					            type: 'video/mp4',
-					            'src': url
-				            });
-				            vm.playerPlay();
-			            });
-		            }
+		            this.startStream()
 	            );
             } else {
 	            this.player.src({
@@ -132,10 +103,45 @@
             }
         },
         methods: {
+	        startStream(_torrent = null){
+		        console.log("Start Torrent Download");
+		        if(_torrent != null){
+		        	console.log(_torrent);
+		        }
+		        this.torrent = this.client.torrents[0];
+		        console.log(this.torrent);
+		        if(this.torrent != null && this.torrent != undefined) {
+			        setTimeout(this.updateProgress, 500);
+			        // Torrents can contain many files. Let's use the .mp4 file
+			        const file = this.torrent.files.find(function (file) {
+				        console.log(file);
+				        if (file.name.endsWith('.mp4')) {
+					        return file.name.endsWith('.mp4');
+				        } else if (file.name.endsWith('.mkv')) {
+					        return file.name.endsWith('.mkv');
+				        } else if (file.name.endsWith('.avi')) {
+					        return file.name.endsWith('.avi');
+				        }
+			        });
+			        console.log("Torrent Get Blob URL");
+			        file.getBlobURL(function (err, url) {
+				        if (err) throw err;
+				        this.link = url;
+				        console.log("Set Player URL: " + url);
+				        this.player.src({
+					        type: 'video/mp4',
+					        'src': url
+				        });
+				        this.playerPlay();
+			        });
+		        } else {
+			        console.log(this.client.torrents);
+		        }
+	        },
+
             /* Change Layout for player */
             toggleBodyClass(addRemoveClass, className) {
                 const el = document.body;
-
                 if (addRemoveClass === 'addClass') {
                     el.classList.add(className);
                 } else {
@@ -373,13 +379,15 @@
             console.log("Component destruction begin");
             this.playerDispose();
             console.log("Player Destroyed");
-            if(client.torrents.length) {
+           /* if(client.torrents.length) {
 	            var torrents = client.torrents;
 	            torrents.foreach(function (torrent) {
 		            client.remove(torrent.hash);
 	            });
 	            console.log("Torrent Client Destroyed");
-            }
+
+            }*/
+	        this.client.destroy();
         },
         destroyed() {
             this.toggleBodyClass('removeClass', 'layout-player');
