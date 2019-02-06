@@ -191,6 +191,18 @@ export default {
                 with_cast: true
             }
         });
+    },
+	geMagnetURI(hash, name){
+    	//Start MagnetURI Construct and Add  TORRENT_HASH
+    	var magnet = "magnet:?xt=urn:btih:" + hash;
+    	//Add Encoded+Movie+Name
+		magnet += "&dn=" + encodeURI(name);
+		//Add Trackers
+		magnet += "&tr=udp://open.demonii.com:1337/announce&tr=udp://tracker.openbittorrent.com:80";
+		magnet += "&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://glotorrents.pw:6969/announce";
+		magnet += "&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://torrent.gresille.org:80/announce";
+		magnet += "&tr=udp://p4p.arenabg.com:1337&tr=udp://tracker.leechers-paradise.org:6969";
+		return magnet;
     }
 };
 

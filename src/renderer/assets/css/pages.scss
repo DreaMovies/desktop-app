@@ -1003,7 +1003,6 @@
 }
 
 .page-tvshow-list {
-
 }
 
 .page-player {
@@ -1027,7 +1026,8 @@
     width: 100%;
     display: flex;
     align-items: center;
-
+    transition: all .2s ease-in-out;
+    opacity: 1;
     a {
       color: #fff;
       font-size: 16px;
@@ -1062,7 +1062,6 @@
     outline: none;
   }
 }
-
 
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
 

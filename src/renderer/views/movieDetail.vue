@@ -56,7 +56,9 @@
 									magnetUri: torrent.url,
 									type: 'torrent'
 								}
-							}" >
+							}"
+							v-b-popover.hover="'Seeds:' + torrent.seeds + '/Peers:' + torrent.peers"
+							:title="torrent.type">
 						{{ torrent.quality }}
 					</router-link>
 				</div> <!-- end column1 -->
