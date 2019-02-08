@@ -8,7 +8,7 @@ const menu 		= new Menu();
 var ipcRenderer = require('electron').ipcRenderer;
 
 
-const subs_search 	= require('./subs_search.js');
+const subs_search 	= require('../subtitles.js');
 const player 		= require('../view/player.js');
 
 

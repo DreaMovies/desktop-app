@@ -1,5 +1,4 @@
 @import "./globals.scss";
-
 @import url(https://fonts.googleapis.com/css?family=Lato:300,400,300,500,600,700);
 /* Generic stuff */
 * {
@@ -11,7 +10,7 @@
 
 html, body {
 	font: 14px/22px "Lato", Arial, sans-serif;
-	color: rgba(#fff,1);
+	color: rgba(#fff, 1);
 	background: #e0e0e0;
 	background: -webkit-linear-gradient(left, #e0e0e0, #a9a9a9);
 	background: -o-linear-gradient(left, #e0e0e0, #a9a9a9);
@@ -21,38 +20,43 @@ html, body {
 	position: relative;
 	display: block;
 }
+
 main {
 	display: flex;
 	justify-content: space-between;
+
 	& > div {
 		flex-basis: 50%;
 	}
 }
+
 a {
 	text-decoration: none;
 	color: #5C7FB8;
+
 	&:hover {
 		text-decoration: underline;
 	}
 }
+
 #app,
 #app > div {
 	height: 100%;
 	width: 100%;
 	position: relative;
 	display: block;
-    overflow: hidden;
+	overflow: hidden;
 }
 
 
 /*
  * Layout Core
  */
-.layout-core{
+.layout-core {
 	/* Base Layout */
-	.layout-app{
-		width: calc( 100% - 200px );
-		height: calc( 100% - 70px );
+	.layout-app {
+		width: calc(100% - 200px);
+		height: calc(100% - 70px);
 		overflow: auto;
 		display: block;
 		position: relative;
@@ -60,6 +64,7 @@ a {
 		margin: 70px 0 0 200px;
 		transition: all .3s ease-in-out;
 	}
+
 	/* Top bar */
 	.window-topbar {
 		background: #000;
@@ -77,20 +82,24 @@ a {
 		padding: 3px;
 		text-align: center;
 		font-size: 13px;
+
 		.os-windows {
 			-webkit-app-region: no-drag;
+
 			.wc-box {
 				position: absolute;
 				top: 0;
 				right: 0;
 				height: 100%;
 				-webkit-app-region: no-drag;
+
 				div {
 					position: relative;
 					float: left;
 					width: 30px;
 					height: 30px;
 					-webkit-app-region: no-drag;
+
 					&:before,
 					&:after {
 						top: 30%;
@@ -123,8 +132,10 @@ a {
 					-webkit-app-region: no-drag;
 					border-width: 1px 1px 2px 1px;
 				}
-				.maximized{
+
+				.maximized {
 					-webkit-app-region: no-drag;
+
 					&:before {
 						top: 20%;
 						bottom: 40%;
@@ -133,14 +144,17 @@ a {
 						border-width: 1px 1px 2px 1px;
 						z-index: 1;
 					}
+
 					&:after {
 						background: #ccc;
 						border-width: 1px 1px 2px 1px;
 						z-index: 2;
 					}
 				}
+
 				.close {
 					-webkit-app-region: no-drag;
+
 					&:before,
 					&:after {
 						bottom: 50%;
@@ -166,11 +180,13 @@ a {
 				}
 			}
 		}
+
 		.os-mac {
 			.title-bar {
 				-webkit-app-region: no-drag;
 				height: 100%;
 			}
+
 			// UI elements in the title bar are collectively refered
 			// to here as "controlls".
 			.close, .minimize, .zoom {
@@ -183,18 +199,22 @@ a {
 				top: 9px;
 				cursor: pointer;
 			}
+
 			.close {
 				background-color: #ff6052;
 				left: 10px;
 			}
+
 			.minimize {
 				background-color: #ffbe06;
 				left: 10px + 12px + 10px;
 			}
+
 			.zoom {
 				background-color: #16cc37;
 				left: 10px + (12px + 10px) * 2;
 			}
+
 			// For OSX we're co-opting the "maximize" button for "fullscreen"
 			.maximize {
 				-webkit-app-region: no-drag;
@@ -204,99 +224,111 @@ a {
 				top: 5px;
 				right: 10px;
 				cursor: pointer;
-				& > .arrow-icon{
-					    height: 14px;
-						width: 14px;
-						background: #aaa;
-						margin: 3px auto;
-						display: inline-block;
-						-webkit-clip-path: polygon(
-							2px 9px, 0px 7px, 0px 14px, 7px 14px,
-							5px 12px, 7px 10px, 4px 7px, 7px 4px,
-							10px 7px, 12px 5px, 14px 7px,
-							14px 0px, 7px 0px, 9px 2px
-						);
+
+				& > .arrow-icon {
+					height: 14px;
+					width: 14px;
+					background: #aaa;
+					margin: 3px auto;
+					display: inline-block;
+					-webkit-clip-path: polygon(
+									2px 9px, 0px 7px, 0px 14px, 7px 14px,
+									5px 12px, 7px 10px, 4px 7px, 7px 4px,
+									10px 7px, 12px 5px, 14px 7px,
+									14px 0px, 7px 0px, 9px 2px
+					);
 				}
 			}
 		}
 	}
+
 	/* Top menu */
-	.navbar-expand-lg .navbar-nav.side-nav{
+	.navbar-expand-lg .navbar-nav.side-nav {
 		flex-direction: column;
 	}
-	.card{
+
+	.card {
 		margin-bottom: 15px;
-		border-radius:0;
-		box-shadow: 0 3px 5px rgba(0,0,0,.1);
+		border-radius: 0;
+		box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
 	}
-	.header-top{
-		box-shadow: 0 3px 5px rgba(0,0,0,.1)
+
+	.header-top {
+		box-shadow: 0 3px 5px rgba(0, 0, 0, .1)
 	}
-	.navbar.header-top.fixed-top{
+
+	.navbar.header-top.fixed-top {
 		top: 30px;
 		height: 40px;
 		transition: all .3s ease-in-out;
 	}
+
 	/* Sidebar */
-	.navbar-nav.side-nav{
+	.navbar-nav.side-nav {
 		background: #585f66;
-		box-shadow: 2px 1px 2px rgba(0,0,0,.1);
-		position:fixed;
+		box-shadow: 2px 1px 2px rgba(0, 0, 0, .1);
+		position: fixed;
 		top: 70px;
-		flex-direction: column!important;
-		left:0;
-		width:200px;
-		overflow-y:auto;
-		bottom:0;
-		overflow-x:hidden;
-		padding-bottom:40px;
+		flex-direction: column !important;
+		left: 0;
+		width: 200px;
+		overflow-y: auto;
+		bottom: 0;
+		overflow-x: hidden;
+		padding-bottom: 40px;
 		transition: all .3s ease-in-out;
-		.nav-item{
-			a{
+
+		.nav-item {
+			a {
 				text-decoration: none;
 			}
 
-			&:hover{
+			&:hover {
 				color: #6a6a6a;
 			}
 		}
 
-      .footer-item {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 200px;
-        box-shadow: 0 0 4px #2f2f2f;
-        .btn-group {
-          width: 100%;
-        }
-      }
-    }
+		.footer-item {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 200px;
+			box-shadow: 0 0 4px #2f2f2f;
+
+			.btn-group {
+				width: 100%;
+			}
+		}
+	}
 }
+
 /* Layout with Player */
-.layout-player{
+.layout-player {
 	/* Hide Top Menu*/
-	.navbar.header-top.fixed-top{
+	.navbar.header-top.fixed-top {
 		top: -10px;
 	}
+
 	/* Hide Sidebar */
-	.navbar-nav.side-nav{
+	.navbar-nav.side-nav {
 		left: -200px;
 	}
+
 	/* Extend view container to the max */
-	.layout-app{
+	.layout-app {
 		width: 100%;
-		height: calc( 100% - 30px );
+		height: calc(100% - 30px);
 		margin: 30px 0 0 0;
 	}
-    &.show-player-header{
-        .page-player{
-            .player-title{
-                top: -50px;
-                opacity: 0;
-            }
-        }
-    }
+
+	&.show-player-header {
+		.page-player {
+			.player-title {
+				top: -50px;
+				opacity: 0;
+			}
+		}
+	}
 }
 
 @import "./pages.scss";

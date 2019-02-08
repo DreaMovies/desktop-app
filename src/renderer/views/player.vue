@@ -1,14 +1,14 @@
 <template>
     <div class="page-player">
         <div class="player-title">
-            <router-link :to="'/' + detail.type + '-detail/' + detail.plugin + '/' + detail.id" class="return-to-list">
+            <router-link :to="links.return" class="return-to-list">
                 <i class="fas fa-arrow-left"></i>
             </router-link>
             <span> {{ title }} </span>
-            <span class="torrent-info" id="player_popover">
+            <span v-if="progress != null" class="torrent-info" id="player_popover">
                 <i class="fas fa-info"></i>
             </span>
-            <b-popover class="popover-info" target="player_popover" triggers="hover focus" placement="bottomleft">
+            <b-popover v-if="progress != null" class="popover-info" target="player_popover" triggers="hover focus" placement="bottomleft">
                 <span class="player-info"><b>Download Speed</b>: {{ progress.speed.download }}</span>
                 <span class="player-info"><b>Upload Speed</b>: {{ progress.speed.upload }}</span>
                 <span class="player-info"><b>Peers</b>: {{ progress.peer }}</span>
@@ -31,15 +31,13 @@
 <script>
     import { ipcRenderer } from 'electron';
 
-    import WebTorrent from 'webtorrent';
-    import moment from 'moment';
     import fs       from 'fs';
-
     import _videojs from 'video.js';
     import 'video.js/dist/video-js.min.css';
     import 'videojs-hotkeys';
 
-    import subtitles from "../services/subs_search";
+    import subtitles    from "../services/subtitles";
+    import torrents     from "../services/torrents";
 
     //import "videojs-contrib-hls";
 
@@ -52,35 +50,18 @@
             'title',
             'url',
 	        'magnetUri',
+	        'path',
+	        'ext',
 	        'type'
         ],
         data(){
             return{
-            	client: new WebTorrent(),
-	            server: null,
-
+            	torrent: null,
+	            progress: null,
                 player: '',
 	            volume: 1,
-	            subtitles: {},
-	            links: [],
-	            file: {
-            		name: "",
-		            path: ""
-	            },
-	            progress: {
-                    speed: {
-                        download: "0",
-                        upload: "0"
-                    },
-                    peer: 0,
-                    complete: "0",
-                    percentage: 0,
-                    time: "0"
-                },
-	            streamSemaphore: -1,
+	            subtitles: [],
                 link: '',
-                torrent: {},
-                download_folder:  "C:/Users/miguel.cerejo/Documents/Download/torrent",//"C:/Users/user/Documents/Download/torrent";
 	            lang_codes: {
 		            'en' : "English",
 		            'fr' : "Francais",
@@ -90,11 +71,14 @@
 		            'es' : "Spanish",
 		            'el' : "Greek",
 		            'pl' : "Polish"
-	            }
+	            },
+	            links: {
+            		return: "/",
+		            subtitles: "",
+	            },
             };
         },
         mounted(){
-            window.playerEvents = this;
             this.playerInitialize();
             this.playerSetupEvents();
 
@@ -104,97 +88,25 @@
             this.toggleBodyClass('addClass', 'layout-player');
 
             if(this.type == "torrent") {
-	            console.log("Mount WebTorrent");
-	            const torrent = this.client.get(this.magnetUri) || this.client.add(this.magnetUri, { path: this.download_folder });
-	            // make sure metadata is available before path matching
-	            if (torrent.metadata) {
-		            this.streamFile(torrent);
-	            } else {
-		            torrent.once('ready', () => this.streamFile(torrent));
-	            }
-	            //this.client.add(
-	            //	this.magnetUri,
-		        //    {
-		        //    	announce: ['ws://127.0.0.1:8800/announce'],
-			    //        path: this.download_folder
-		        //    },
-		        //    this.startStream()
-	            //);
-            } else {
+	            this.links.return = '/' + detail.type + '-detail/' + detail.plugin + '/' + detail.id;
+	            this.torrent = torrents.addTorrent(this.magnetUri, this.waitTorrent());
+            } else if(this.type == "local") {
+	            this.links.return = "/explorer";
+	            this.links.subtitles = (this.path).replace(this.title, "");
+	            this.loadSubtitles();
 	            this.player.src({
-		            type: 'video/mp4',
-		            'src': this.url
+		            'src': this.path
 	            });
+	            //this.player.play();
+            } else {
+
             }
         },
         methods: {
-	        streamFile(torrent) {
-		        this.torrent = torrent;
-		        let path = '';
-		        // only render the first file found matching the path exactly
-		        const fileToRender = torrent.files.find((file) => {
-			        console.log(file);
-			        if (file.name.endsWith('.mp4') || file.name.endsWith('.mkv') || file.name.endsWith('.avi')) {
-				        // only set rootDir if the file is in a directory
-				        const rootDir = /\//.test(file.path) ? (torrent.name + '/') : '';
-				        path = path.replace(/^\//, ''); // remove initial / if present
-				        return file.path;// === rootDir + path;
-			        }
-			        //if (!path) return true; // if no path is specified, render the first file
-		        });
-
-		        if (!fileToRender) {
-			        throw new Error('No file found matching this path: ' + path);
-		        }
-
-		        fileToRender.renderTo('video', {
-			        autoplay: true, controls: true // stops any overwrite of the element's values
-		        }, (err, elem) => {
-			        if (err) throw err;
-			        console.log('magnet-loaded');
-		        });
-		        this.file.name = fileToRender.name;
-		        this.file.path = fileToRender.path;
-		        this.file.path = (this.file.path).replace("\\", "/");
+	        waitTorrent(params){
+	        	console.log("[View::Player] wait Torrent Params");
 		        this.getSubtitles();
-		        this.updateProgress();
 	        },
-            /* WebTorrent Related */
-            updateProgress() {
-                this.progress.speed.download    = this.prettyBytes(this.torrent.downloadSpeed);
-                this.progress.speed.upload      = this.prettyBytes(this.torrent.uploadSpeed);
-                this.progress.peer              = this.torrent.numPeers;
-                this.progress.percentage    = Math.round((this.torrent.received / this.torrent.length) * 100);
-                this.progress.complete      = this.prettyBytes(this.torrent.received);
-                this.progress.time          = this.remainingTime(this.torrent.timeRemaining);
-
-                if (this.progress.percentage != 100) {
-                    setTimeout(this.updateProgress, 500);
-                }
-            },
-            /* Human readable bytes util */
-            prettyBytes(num) {
-                var exponent, unit, neg = num < 0, units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-                if (neg)
-                    num = -num;
-                if (num < 1)
-                    return (neg ? '-' : '') + num + ' B';
-                exponent = Math.min(Math.floor(Math.log(num) / Math.log(1000)), units.length - 1);
-                num = Number((num / Math.pow(1000, exponent)).toFixed(2));
-                unit = units[exponent];
-                return (neg ? '-' : '') + num + ' ' + unit;
-            },
-
-            /* Statistics */
-            remainingTime(remaining) {
-               // Remaining time
-                if (remaining == 0) {
-                    return 'Done';
-                } else {
-                    var timer = moment.duration(remaining / 1000, 'seconds').humanize();
-                    return timer[0].toUpperCase() + timer.substring(1) + ' remaining';
-                }
-            },
             /* Player VideoJS Related*/
             playerInitialize(){
                 this.player = videojs('myPlayer', {
@@ -276,14 +188,23 @@
                 //});
             },
 	        getSubtitles(){
-		        console.log("get subtitles");
-		        subtitles.getSubs(this.file.name, this.download_folder + '/' + (this.file.path).replace(this.file.name, "") );
+		        console.log("[View::Player] Get subtitles");
+		        if(this.type == "torrent") {
+			        subtitles.getSubs(this.file.name, this.download_folder + '/' + (this.file.path).replace(this.file.name, ""));
+		        } else if(this.type == "local"){
+			        subtitles.getSubs(this.title, this.links.subtitles);
+		        }
 		        this.loadSubtitles();
 	        },
 	        loadSubtitles(){
-            	console.log("load subtitles");
-		        let subs_folder_path = this.download_folder + '/' + (this.file.path).substr(0, (this.file.path).lastIndexOf("/")) + "/subs/vtt/";
-
+            	console.log("[View::Player] Load subtitles");
+		        let subs_folder_path = "";
+		        if(this.type == "torrent") {
+			        subs_folder_path = this.download_folder + '/' + (this.file.path).substr(0, (this.file.path).lastIndexOf("/")) + "/subs/vtt/";
+		        } else if(this.type == "local"){
+			        subs_folder_path = this.links.subtitles + "/subs/vtt/";
+		        }
+				const Self = this;
 		        if (fs.existsSync(subs_folder_path)){
 			        let sub_list = fs.readdirSync(subs_folder_path);
 			        console.log(sub_list);
@@ -293,14 +214,16 @@
 				        var lang = file.split("_")[0];
 
 				        let current_sub = {
-					        src: subs_folder_path + file,
-					        kind: 'captions',
-					        srclang: lang,
+					        kind: 'subtitles',
 					        label: this.lang_codes[lang],
-					        mode: (lang == 'pt' ? 'showing' : 'hidden')
+					        language: lang,
+					        mode: (lang == 'pt' ? 'showing' : 'hidden'),
+					        src: subs_folder_path + file,
 				        };
-				        this.player.addRemoteTextTrack(current_sub, false);
+				        Self.player.addRemoteTextTrack(current_sub, true);
 			        }
+		        } else {
+		        	this.getSubtitles();
 		        }
 
 	        },
@@ -379,7 +302,6 @@
                     }
                 });
             },
-
 	        /* Change Layout for player */
 	        toggleBodyClass(addRemoveClass, className) {
 		        const el = document.body;
@@ -389,33 +311,11 @@
 			        el.classList.remove(className);
 		        }
 	        },
-            getFileType(){
-                const types = {
-                    '3gpp': 'video/3gpp',
-                    'H264': 'video/H264',
-                    'H265': 'video/H265',
-                    'JPEG': 'video/JPEG',
-                    'jpeg2000': 'video/jpeg2000',
-                    'mp4': 'video/mp4',
-                    'MPV': 'video/MPV',
-                    'mpeg': 'video/mpeg4-generic',
-                    'ogg': 'video/ogg'
-                }
-            },
         },
         beforeDestroy() {
-            console.log("Component destruction begin");
 	        this.player.dispose();
-            console.log("Player Destroyed");
-           /* if(client.torrents.length) {
-	            var torrents = client.torrents;
-	            torrents.foreach(function (torrent) {
-		            client.remove(torrent.hash);
-	            });
-	            console.log("Torrent Client Destroyed");
-
-            }*/
-	        this.client.destroy();
+	        console.log("[View::Player] Player Destroyed");
+	        torrents.destroy();
         },
         destroyed() {
             this.toggleBodyClass('removeClass', 'layout-player');
