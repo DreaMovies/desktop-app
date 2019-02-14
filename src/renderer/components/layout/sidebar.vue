@@ -3,7 +3,13 @@
 		<b-nav-item class="text-white" to="/index">Home</b-nav-item>
 		<b-nav-item class="text-white" to="/explorer">Local Files</b-nav-item>
 		<b-dropdown-header>API's</b-dropdown-header>
-		<b-nav-item v-for="item in list" :key="item.config.name" class="text-white" :to="'/' + item.config.type + '-list/' + item.config.name">{{ item.config.label }}</b-nav-item>
+
+		<b-nav-item v-for="item in $plugins"
+		            v-show="item.active"
+		            :key="item.config.name"
+		            class="text-white" :to="'/' + item.config.type + '-list/' + item.config.name">
+			{{ item.config.label }}
+		</b-nav-item>
 		<li class="footer-item">
 			<b-btn-group>
 				<b-btn to="/settings">

@@ -18,11 +18,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 //Database Initializer
 import { settings, cache, downloads } from './datastore';
+
 Vue.prototype.$db = {
 	settings,
 	cache,
     downloads
 }; //just use this.$db to access it
+Vue.prototype.$db.settings.load(); //load settings table
 
 //WebTorrent Initializer
 const client = new WebTorrent();
@@ -76,3 +78,9 @@ window.ondrop = (e) => {
 window.onbeforeunload = function (e) {
   vm.$electron.ipcRenderer.send('stop-progress');
 };
+
+/*
+ * Need to get some ideas/ways to have better performance in the app
+ *      https://github.com/randyou/snail/tree/master/src/renderer
+ *      https://github.com/lukakerr/BitStream
+ */
