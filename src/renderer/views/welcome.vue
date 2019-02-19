@@ -8,15 +8,17 @@
         </span>
         <system-information></system-information>
       </div>
-	    {{ $t('index.title') }}
+
       <div class="right-side">
         <div class="doc">
-          <div class="title">Getting Started</div>
+          <div class="title">Welcome to Dreamovies App</div>
           <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
+            With this app you will be able to see local media content and get information about movies and shows from
+            the internet as well from other sources.
           </p>
+	        <label for="username">Set your username</label>
+	        <input type="text" v-model="username" id="username" class="form-control">
+	        <span class="username-check"></span>
           <!-- <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br> -->
         </div>
         <div class="doc">
@@ -35,6 +37,11 @@
   export default {
     name: 'landing-page',
     components: { SystemInformation },
+	  data() {
+		  return {
+			  settings: ""
+		  }
+	  },
     methods: {
       // open(link) {
       // this.link = link;

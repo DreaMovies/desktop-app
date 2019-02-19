@@ -38,6 +38,7 @@ const settings = {
 						maxUploads: 3,
 						seed: true
 					},
+					locale: 'en',
 					plugins: {},
 					installed: new Date(),
 					updated: "",

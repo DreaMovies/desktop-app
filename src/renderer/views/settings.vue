@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper page-settings">
+	<div class="wrapper page-settings container-fluid">
 		<div class="form-group row">
 			<label for="staticEmail" class="col-sm-2 col-form-label">Start App with:</label>
 			<div class="col-sm-10">
@@ -13,7 +13,18 @@
 				</select>
 			</div>
 		</div>
-
+		<div class="form-group row">
+			<label for="locale" class="col-sm-2 col-form-label">locale:</label>
+			<div class="col-sm-10">
+				<select id="locale" class="form-control" v-model="locale">
+					<option value="en">English</option>
+					<option value="pt">Portugues</option>
+					<option value="es">Spanish</option>
+					<option value="fr">French</option>
+				</select>
+				<p>Local Change Test: <small>{{ $t('welcome.title') }}</small></p>
+			</div>
+		</div>
 
 		<div class="form-group row">
 			<label for="inputPassword" class="col-sm-2 col-form-label">Download Location</label>
@@ -60,6 +71,13 @@
 				<input type="checkbox" class="custom-control-input" id="customSwitch_subtitles"
 				       @change="updateNotifications">
 				<label class="custom-control-label" for="customSwitch_subtitles">Automaticly download Subtitles</label>
+			</div>
+		</div>
+		<div>
+			<div class="custom-control custom-switch">
+				<input type="checkbox" class="custom-control-input" id="customSwitch_notification_shows"
+				       @change="updateNotifications">
+				<label class="custom-control-label" for="customSwitch_notification_shows">Notifications for new episodes of favorited Tv Shows</label>
 			</div>
 		</div>
 
@@ -135,7 +153,8 @@
 						maxUploads: 3,
 						seed: true
 					},
-				}
+				},
+				locale: 'en'
 			}
 		},
 		created(){
@@ -164,5 +183,10 @@
 				mainWindow.webContents.openDevTools();
 			}
 		},
+		watch: {
+			locale (val) {
+				this.$i18n.locale = val;
+			}
+		}
 	};
 </script>

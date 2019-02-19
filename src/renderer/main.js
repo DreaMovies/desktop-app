@@ -15,6 +15,18 @@ Vue.use(BootstrapVue);
 import '@fortawesome/fontawesome-free/css/all.css';
 //import '@fortawesome/fontawesome-free/js/all.js';
 
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);
+
+import { languages, defaultLocale } from './translations/index.js';
+const messages = Object.assign(languages);
+
+let i18n = new VueI18n({
+	locale: defaultLocale,
+	fallbackLocale: 'en',
+	messages
+});
+
 
 //Database Initializer
 import { settings, cache, downloads } from './datastore';
@@ -53,10 +65,11 @@ window.Event = new Vue(); //Handling events between siblings and grandparent to 
 
 /* eslint-disable no-new */
 const vm = new Vue({
-  components: { App },
-  router,
-  store,
-  template: '<App/>'
+	components: { App },
+	router,
+	store,
+	i18n,
+	template: '<App/>'
 });
 vm.$mount('#app');
 

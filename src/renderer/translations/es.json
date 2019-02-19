@@ -1,0 +1,18 @@
+{
+	"welcome": {
+		"title": "Bienvenido a la aplicación de Dreamovies",
+		"description": "Con esta aplicación, podrá ver el contenido de los medios locales y obtener información sobre películas y programas de Internet, así como de otras fuentes."
+	},
+	"index": {
+		"title": "título",
+		"favorites": {
+			"movies": "Peliculas favoritas",
+			"shows": "Programas de TV favoritos"
+		},
+		"bookmarks": "Marcadores"
+	},
+	"chat": {
+		"new_chat": "Nueva conversación",
+		"messages": "Mensajes"
+	}
+}

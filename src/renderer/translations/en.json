@@ -1,0 +1,18 @@
+{
+	"welcome": {
+		"title" : "Welcome to Dreamovies App",
+		"description": "With this app you will be able to see local media content and get information about movies and shows from the internet as well from other sources."
+	},
+	"index": {
+		"title": "title",
+		"favorites": {
+			"movies": "Favorite Movies",
+			"shows": "Favorite TV Shows"
+		},
+		"bookmarks": "Bookmarks"
+	},
+	"chat": {
+		"new_chat": "New Chat",
+		"messages": "Messages"
+	}
+}
