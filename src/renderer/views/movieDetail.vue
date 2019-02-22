@@ -40,27 +40,14 @@
 					<h4>Genres</h4>
 					<span class="tag" v-for="genre in movie.genres">{{ genre }}</span>
 					<h4>Sources</h4>
-					<router-link
+					<span
 							class="tag download-item bg-primary text-white"
 							v-for="torrent in movie.torrents"
-							:to="{
-								name: 'player',
-								params: {
-									detail: {
-										type: 'movie',
-										plugin: params.plugin,
-										imdb_code: movie.imdb_code,
-										id: movie.id
-									},
-									title: movie.title,
-									magnetUri: torrent.url,
-									type: 'torrent'
-								}
-							}"
+							@click="startLoading('torrent', torrent.url)"
 							v-b-popover.hover="'Seeds:' + torrent.seeds + '/Peers:' + torrent.peers"
 							:title="torrent.type">
 						{{ torrent.quality }}
-					</router-link>
+					</span>
 				</div> <!-- end column1 -->
 				<div class="column2">
 					<p>{{ movie.description_full }}</p>
@@ -75,6 +62,9 @@
 				</div> <!-- end column2 -->
 			</div> <!-- end description -->
 		</div> <!-- end movie-card -->
+		<div v-show="isLoading" class="loading-screen">
+			<span class="loading-circle"></span>
+		</div>
 	</div>
 </template>
 
@@ -92,7 +82,8 @@
 					id: "",
 					imdb: ""
 				},
-				movie: {}
+				movie: {},
+				isLoading: false,
 			}
 		},
         created: function () {
@@ -114,6 +105,47 @@
 					this.movie = response.data.data.movie;
 				});
             },
+	        startLoading(type, path){
+		        this.isLoading = true;
+		        let final_path = "";
+				if(type == "torrent"){
+					//load torrent and return path
+					this.redirectOnReady(type, final_path);
+				} else {
+					this.redirectOnReady(type, final_path);
+				}
+
+		        if(this.type == "torrent") {
+			        this.links.return = '/' + this.detail.type + '-detail/' + this.detail.plugin + '/' + this.detail.id;
+			        this.torrent = torrents.addTorrent(this.magnetUri);
+			        this.waitTorrent();
+		        } else if(this.type == "local") {
+			        this.links.return = "/explorer";
+			        this.links.subtitles = (this.path).replace(this.title, "");
+			        this.loadSubtitles();
+			        this.player.src({
+				        'src': this.path
+			        });
+			        //this.player.play();
+		        } else {
+
+		        }
+	        },
+	        redirectOnReady(type, path){
+		        this.$router.push({
+				        name: 'player',
+				        params: {
+					        detail: {
+						        type: 'movie',
+							        plugin: this.params.plugin,
+							        imdb_code: this.movie.imdb_code,
+							        id: this.movie.id
+					        },
+					        title: this.movie.title,
+					        path: path
+				        }
+			        });
+	        }
 		},
 	};
 </script>

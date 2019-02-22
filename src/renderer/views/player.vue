@@ -88,8 +88,9 @@
             this.toggleBodyClass('addClass', 'layout-player');
 
             if(this.type == "torrent") {
-	            this.links.return = '/' + detail.type + '-detail/' + detail.plugin + '/' + detail.id;
-	            this.torrent = torrents.addTorrent(this.magnetUri, this.waitTorrent());
+	            this.links.return = '/' + this.detail.type + '-detail/' + this.detail.plugin + '/' + this.detail.id;
+	            this.torrent = torrents.addTorrent(this.magnetUri);
+	            this.waitTorrent();
             } else if(this.type == "local") {
 	            this.links.return = "/explorer";
 	            this.links.subtitles = (this.path).replace(this.title, "");
@@ -105,7 +106,10 @@
         methods: {
 	        waitTorrent(params){
 	        	console.log("[View::Player] wait Torrent Params");
-		        this.getSubtitles();
+	        	console.log(params);
+		        //this.getSubtitles();
+		        let files = torrents.streamFile(this.torrent);
+		        console.log(files);
 	        },
             /* Player VideoJS Related*/
             playerInitialize(){

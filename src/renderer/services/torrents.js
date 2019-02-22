@@ -42,23 +42,28 @@ export default {
 	}),
 	server: null,
 
-	addTorrent(magnetUri, callback){
+	addTorrent(magnetUri){
 		console.log("[Torrent] Add Torrent");
+		if(this.client && this.client.destroyed){
+			this.client = new WebTorrent({ maxConns: 100 });
+		}
 		const torrent = this.client.get(magnetUri) || this.client.add(magnetUri, this.config.torrent);
 		// make sure metadata is available before path matching
 		if (torrent.metadata) {
-			this.streamFile(torrent, callback);
+			this.streamFile(torrent);
 		} else {
-			torrent.once('ready', () => this.streamFile(torrent, callback));
+			torrent.once('ready', () => this.streamFile(torrent));
 		}
+		return torrent;
 	},
 
-	streamFile(torrent, callback) {
+	streamFile(torrent) {
 		console.log("[Torrent] Get File to stream");
 		this.data.torrent = torrent;
 		let path = '';
 		// only render the first file found matching the path exactly
 		const fileToPlay = torrent.files.find((file) => {
+			console.log(file.name);
 			if (file.name.endsWith('.mp4') || file.name.endsWith('.mkv') || file.name.endsWith('.avi')) {
 				// only set rootDir if the file is in a directory
 				const rootDir = /\//.test(file.path) ? (torrent.name + '/') : '';
@@ -80,22 +85,22 @@ export default {
 		//});
 		this.data.file.name = fileToPlay.name;
 		this.data.file.path = (fileToPlay.path).replace("\\", "/");
-
-		callback();
-
 		this.updateProgress();
+
+		return this.data.file;
 	},
 
 	/* WebTorrent Related */
 	updateProgress() {
-		this.progress.speed.download    = this.prettyBytes(this.data.torrent.downloadSpeed);
-		this.progress.speed.upload      = this.prettyBytes(this.data.torrent.uploadSpeed);
-		this.progress.peer              = this.data.torrent.numPeers;
-		this.progress.percentage    = Math.round((this.data.torrent.received / this.data.torrent.length) * 100);
-		this.progress.complete      = this.prettyBytes(this.data.torrent.received);
-		this.progress.time          = this.remainingTime(this.data.torrent.timeRemaining);
+		console.log(this.data.torrent);
+		this.data.progress.speed.download    = this.prettyBytes(this.data.torrent.downloadSpeed);
+		this.data.progress.speed.upload      = this.prettyBytes(this.data.torrent.uploadSpeed);
+		this.data.progress.peer              = this.data.torrent.numPeers;
+		this.data.progress.percentage    = Math.round((this.data.torrent.received / this.data.torrent.length) * 100);
+		this.data.progress.complete      = this.prettyBytes(this.data.torrent.received);
+		this.data.progress.time          = this.remainingTime(this.data.torrent.timeRemaining);
 
-		if (this.progress.percentage != 100) {
+		if (this.data.progress.percentage != 100) {
 			setTimeout(this.updateProgress, 500);
 		}
 	},
